@@ -36,10 +36,6 @@ public class ControllerProvider extends ContentProvider {
         uriMatcher.addURI(PROVIDER_NAME, "control/s#", CONTROL_ID);
     }
 
-    /**
-     * Database specific constant declarations
-     */
-
     private SQLiteDatabase db;
     static final String DATABASE_NAME = "Controller";
     static final String CONTROLS_TABLE_NAME = "control";
@@ -50,11 +46,6 @@ public class ControllerProvider extends ContentProvider {
                     " project_no TEXT NOT NULL, " +
                     " project_name TEXT NOT NULL, " +
                     " project_status TEXT NOT NULL);";
-
-    /**
-     * Helper class that actually creates and manages
-     * the provider's underlying data repository.
-     */
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
         DatabaseHelper(Context context){
@@ -77,26 +68,13 @@ public class ControllerProvider extends ContentProvider {
     public boolean onCreate() {
         Context context = getContext();
         DatabaseHelper dbHelper = new DatabaseHelper(context);
-
-        /**
-         * Create a write able database which will trigger its
-         * creation if it doesn't already exist.
-         */
-
         db = dbHelper.getWritableDatabase();
         return (db == null)? false:true;
     }
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        /**
-         * Add a new student record
-         */
         long rowID = db.insert(CONTROLS_TABLE_NAME, "", values);
-
-        /**
-         * If record is added successfully
-         */
         if (rowID > 0) {
             Uri _uri = ContentUris.withAppendedId(CONTENT_URI, rowID);
             getContext().getContentResolver().notifyChange(_uri, null);
@@ -109,39 +87,10 @@ public class ControllerProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection,
                         String selection, String[] selectionArgs, String sortOrder) {
-//        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-//        qb.setTables(STUDENTS_TABLE_NAME);
-//
-//        switch (uriMatcher.match(uri)) {
-//            case STUDENTS:
-//                qb.setProjectionMap(STUDENTS_PROJECTION_MAP);
-//                break;
-//
-//            case STUDENT_ID:
-//                qb.appendWhere( ID + "=" + uri.getPathSegments().get(1));
-//                break;
-//
-//            default:
-//        }
-//
-//        if (sortOrder == null || sortOrder == ""){
-//            /**
-//             * By default sort on student names
-//             */
-//            sortOrder = PROJECT_NAME;
-//        }
-
-//        Cursor c = qb.query(db,	projection,	selection,
-//                selectionArgs,null, null, sortOrder);
-
         String selectQuery = "SELECT  * FROM  "+ CONTROLS_TABLE_NAME +" WHERE project_no = "+selection ;
 
         Cursor c = db.rawQuery(selectQuery, null);
 
-
-        /**
-         * register to watch a content URI for changes
-         */
         c.setNotificationUri(getContext().getContentResolver(), uri);
         return c;
     }
@@ -193,14 +142,9 @@ public class ControllerProvider extends ContentProvider {
     @Override
     public String getType(Uri uri) {
         switch (uriMatcher.match(uri)){
-            /**
-             * Get all student records
-             */
+
             case CONTROLS:
                 return "com.android.cursor.dir/com.example.controls";
-            /**
-             * Get a particular student
-             */
             case CONTROL_ID:
                 return "com.android.cursor.item/com.example.controls";
             default:
