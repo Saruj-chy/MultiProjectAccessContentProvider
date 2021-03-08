@@ -15,14 +15,14 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    static final String PROVIDER_NAME = "com.example.controllerproject.StudentsProvider";
-    static final String URL = "content://" + PROVIDER_NAME + "/students";
-    static final Uri CONTENT_URI = Uri.parse(URL);
+    private String PROVIDER_NAME = "com.example.controllerproject.ControllerProvider";
+    private String URL = "content://" + PROVIDER_NAME + "/controls";
+    private Uri CONTENT_URI = Uri.parse(URL);
 
-    static final String ID = "id";
-    static final String PROJECT_NO = "project_no";
-    static final String PROJECT_NAME = "project_name";
-    static final String PROJECT_STATUS = "project_status";
+    private String ID = "id";
+    private String PROJECT_NO = "project_no";
+    private String PROJECT_NAME = "project_name";
+    private String PROJECT_STATUS = "project_status";
 
     private EditText mProjectNoEditText, mProjectNameEditText, mProjectStatusEditText ;
     private Button mInsertBtn, mUpdateBtn, mDeleteBtn, mShowBtn ;

@@ -9,15 +9,14 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
 import java.util.HashMap;
 
 public class ControllerProvider extends ContentProvider {
-    static final String PROVIDER_NAME = "com.example.controllerproject.StudentsProvider";
-    static final String URL = "content://" + PROVIDER_NAME + "/students";
+    static final String PROVIDER_NAME = "com.example.controllerproject.ControllerProvider";
+    static final String URL = "content://" + PROVIDER_NAME + "/controls";
     static final Uri CONTENT_URI = Uri.parse(URL);
 
     static final String ID = "id";
@@ -27,14 +26,14 @@ public class ControllerProvider extends ContentProvider {
 
     private static HashMap<String, String> STUDENTS_PROJECTION_MAP;
 
-    static final int STUDENTS = 1;
-    static final int STUDENT_ID = 2;
+    static final int CONTROLS = 1;
+    static final int CONTROL_ID = 2;
 
     static final UriMatcher uriMatcher;
     static{
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(PROVIDER_NAME, "students", STUDENTS);
-        uriMatcher.addURI(PROVIDER_NAME, "students/#", STUDENT_ID);
+        uriMatcher.addURI(PROVIDER_NAME, "controls", CONTROLS);
+        uriMatcher.addURI(PROVIDER_NAME, "control/s#", CONTROL_ID);
     }
 
     /**
@@ -42,11 +41,11 @@ public class ControllerProvider extends ContentProvider {
      */
 
     private SQLiteDatabase db;
-    static final String DATABASE_NAME = "College";
-    static final String STUDENTS_TABLE_NAME = "students";
+    static final String DATABASE_NAME = "Controller";
+    static final String CONTROLS_TABLE_NAME = "control";
     static final int DATABASE_VERSION = 1;
     static final String CREATE_DB_TABLE =
-            " CREATE TABLE " + STUDENTS_TABLE_NAME +
+            " CREATE TABLE " + CONTROLS_TABLE_NAME +
                     " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     " project_no TEXT NOT NULL, " +
                     " project_name TEXT NOT NULL, " +
@@ -69,7 +68,7 @@ public class ControllerProvider extends ContentProvider {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " +  STUDENTS_TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + CONTROLS_TABLE_NAME);
             onCreate(db);
         }
     }
@@ -93,7 +92,7 @@ public class ControllerProvider extends ContentProvider {
         /**
          * Add a new student record
          */
-        long rowID = db.insert(	STUDENTS_TABLE_NAME, "", values);
+        long rowID = db.insert(CONTROLS_TABLE_NAME, "", values);
 
         /**
          * If record is added successfully
@@ -135,7 +134,7 @@ public class ControllerProvider extends ContentProvider {
 //        Cursor c = qb.query(db,	projection,	selection,
 //                selectionArgs,null, null, sortOrder);
 
-        String selectQuery = "SELECT  * FROM  "+ STUDENTS_TABLE_NAME+" WHERE project_no = "+selection ;
+        String selectQuery = "SELECT  * FROM  "+ CONTROLS_TABLE_NAME +" WHERE project_no = "+selection ;
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -151,13 +150,13 @@ public class ControllerProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         int count = 0;
         switch (uriMatcher.match(uri)){
-            case STUDENTS:
-                count = db.delete(STUDENTS_TABLE_NAME, selection, selectionArgs);
+            case CONTROLS:
+                count = db.delete(CONTROLS_TABLE_NAME, selection, selectionArgs);
                 break;
 
-            case STUDENT_ID:
+            case CONTROL_ID:
                 String project_no = uri.getPathSegments().get(2);
-                count = db.delete( STUDENTS_TABLE_NAME, PROJECT_NO +  " = " + project_no +
+                count = db.delete(CONTROLS_TABLE_NAME, PROJECT_NO +  " = " + project_no +
                                 (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
                 break;
             default:
@@ -173,13 +172,13 @@ public class ControllerProvider extends ContentProvider {
                       String selection, String[] selectionArgs) {
         int count = 0;
         switch (uriMatcher.match(uri)) {
-            case STUDENTS:
-                count = db.update(STUDENTS_TABLE_NAME, values, selection, selectionArgs);
+            case CONTROLS:
+                count = db.update(CONTROLS_TABLE_NAME, values, selection, selectionArgs);
                 break;
 
-            case STUDENT_ID:
+            case CONTROL_ID:
 
-                count = db.update(STUDENTS_TABLE_NAME, values,
+                count = db.update(CONTROLS_TABLE_NAME, values,
                         ID + " = " + uri.getPathSegments().get(1) +
                                 (!TextUtils.isEmpty(selection) ? " AND (" +selection + ')' : ""), selectionArgs);
                 break;
@@ -197,13 +196,13 @@ public class ControllerProvider extends ContentProvider {
             /**
              * Get all student records
              */
-            case STUDENTS:
-                return "vnd.android.cursor.dir/vnd.example.students";
+            case CONTROLS:
+                return "com.android.cursor.dir/com.example.controls";
             /**
              * Get a particular student
              */
-            case STUDENT_ID:
-                return "vnd.android.cursor.item/vnd.example.students";
+            case CONTROL_ID:
+                return "com.android.cursor.item/com.example.controls";
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }

@@ -19,7 +19,7 @@
 
         <provider
             android:name=".ControllerProvider"
-            android:authorities="com.example.controllerproject.StudentsProvider"
+            android:authorities="com.example.controllerproject.ControllerProvider"
             android:exported="true" />
 
 
