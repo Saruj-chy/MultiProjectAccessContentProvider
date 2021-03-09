@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.HashMap;
 
@@ -19,10 +20,12 @@ public class ControllerProvider extends ContentProvider {
     static final String URL = "content://" + PROVIDER_NAME + "/controls";
     static final Uri CONTENT_URI = Uri.parse(URL);
 
-    static final String ID = "id";
-    static final String PROJECT_NO = "project_no";
-    static final String PROJECT_NAME = "project_name";
-    static final String PROJECT_STATUS = "project_status";
+//    static final String ID = "id";
+    static final String LOGNO = "logno";
+    static final String SRC = "src";
+    static final String ACTIONS = "actions";
+    static final String DATA = "data";
+    static final String TIMESTAMP = "timestamp";
 
     private static HashMap<String, String> STUDENTS_PROJECTION_MAP;
 
@@ -38,14 +41,27 @@ public class ControllerProvider extends ContentProvider {
 
     private SQLiteDatabase db;
     static final String DATABASE_NAME = "Controller";
-    static final String CONTROLS_TABLE_NAME = "control";
+    static final String LOG_TABLE_NAME = "log_table";
+    static final String TASK_TABLE_NAME = "task_table";
+
     static final int DATABASE_VERSION = 1;
-    static final String CREATE_DB_TABLE =
-            " CREATE TABLE " + CONTROLS_TABLE_NAME +
-                    " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    " project_no TEXT NOT NULL, " +
-                    " project_name TEXT NOT NULL, " +
-                    " project_status TEXT NOT NULL);";
+    static final String CREATE_LOG_TABLE =
+            " CREATE TABLE " + LOG_TABLE_NAME +
+                    " ("+ LOGNO + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//                    LOGNO + " TEXT NOT NULL, " +
+                    SRC + " TEXT NOT NULL, " +
+                    ACTIONS + " TEXT NOT NULL, " +
+                    DATA + " TEXT NOT NULL, " +
+                    TIMESTAMP+" DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL);" ;
+
+//    static final String CREATE_TASK_TABLE =
+//            " CREATE TABLE " + TASK_TABLE_NAME +
+//                    " ("+ ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//                    LOGNO + " TEXT NOT NULL, " +
+//                    SRC + " TEXT NOT NULL, " +
+//                    ACTIONS + " TEXT NOT NULL, " +
+//                    DATA + " TEXT NOT NULL, " +
+//                    TIMESTAMP+" DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL);" ;
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
         DatabaseHelper(Context context){
@@ -54,12 +70,12 @@ public class ControllerProvider extends ContentProvider {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL(CREATE_DB_TABLE);
+            db.execSQL(CREATE_LOG_TABLE);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " + CONTROLS_TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + LOG_TABLE_NAME);
             onCreate(db);
         }
     }
@@ -69,12 +85,12 @@ public class ControllerProvider extends ContentProvider {
         Context context = getContext();
         DatabaseHelper dbHelper = new DatabaseHelper(context);
         db = dbHelper.getWritableDatabase();
-        return (db == null)? false:true;
+        return (db == null)? false : true;
     }
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        long rowID = db.insert(CONTROLS_TABLE_NAME, "", values);
+        long rowID = db.insert(LOG_TABLE_NAME, "", values);
         if (rowID > 0) {
             Uri _uri = ContentUris.withAppendedId(CONTENT_URI, rowID);
             getContext().getContentResolver().notifyChange(_uri, null);
@@ -87,10 +103,20 @@ public class ControllerProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection,
                         String selection, String[] selectionArgs, String sortOrder) {
-        String selectQuery = "SELECT  * FROM  "+ CONTROLS_TABLE_NAME +" WHERE project_no = "+selection ;
 
+        Log.e("query", selection+" :s: "+ sortOrder) ;
+        String selectQuery ;
+
+        selectQuery = "SELECT  * FROM  "+ LOG_TABLE_NAME +" WHERE src = \""+selection+"\"" ;
+//        if(selection.equalsIgnoreCase("")) {
+//            selection = String.valueOf(1);
+//        }
+//        if(!sortOrder.equalsIgnoreCase("")){
+//
+//        }else{
+//            selectQuery = "SELECT  * FROM  "+ LOG_TABLE_NAME +" WHERE logno = "+selection+" " ;
+//        }
         Cursor c = db.rawQuery(selectQuery, null);
-
         c.setNotificationUri(getContext().getContentResolver(), uri);
         return c;
     }
@@ -100,12 +126,12 @@ public class ControllerProvider extends ContentProvider {
         int count = 0;
         switch (uriMatcher.match(uri)){
             case CONTROLS:
-                count = db.delete(CONTROLS_TABLE_NAME, selection, selectionArgs);
+                count = db.delete(LOG_TABLE_NAME, selection, selectionArgs);
                 break;
 
             case CONTROL_ID:
-                String project_no = uri.getPathSegments().get(2);
-                count = db.delete(CONTROLS_TABLE_NAME, PROJECT_NO +  " = " + project_no +
+                String log_no = uri.getPathSegments().get(2);
+                count = db.delete(LOG_TABLE_NAME, LOGNO +  " = " + log_no +
                                 (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
                 break;
             default:
@@ -122,13 +148,12 @@ public class ControllerProvider extends ContentProvider {
         int count = 0;
         switch (uriMatcher.match(uri)) {
             case CONTROLS:
-                count = db.update(CONTROLS_TABLE_NAME, values, selection, selectionArgs);
+                count = db.update(LOG_TABLE_NAME, values, selection, selectionArgs);
                 break;
 
             case CONTROL_ID:
-
-                count = db.update(CONTROLS_TABLE_NAME, values,
-                        ID + " = " + uri.getPathSegments().get(1) +
+                count = db.update(LOG_TABLE_NAME, values,
+                        LOGNO + " = " + uri.getPathSegments().get(1) +
                                 (!TextUtils.isEmpty(selection) ? " AND (" +selection + ')' : ""), selectionArgs);
                 break;
             default:
