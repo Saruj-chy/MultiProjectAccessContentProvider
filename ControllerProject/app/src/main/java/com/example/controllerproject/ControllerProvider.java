@@ -181,20 +181,44 @@ public class ControllerProvider extends ContentProvider {
                 String selectQuery = "SELECT * FROM "+ TASK_TABLE_NAME +"  WHERE `assignedto` = \"\" ORDER BY sl ASC LIMIT 1" ;
                 c = db.rawQuery(selectQuery, null);
                 break;
-            default:
+            case "all_task":
                 SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
                 qb.setTables(TASK_TABLE_NAME);
                 qb.setProjectionMap(STUDENTS_PROJECTION_MAP);
 
-                c = qb.query(db,	projection,	selection,
+                c = qb.query(db, projection,	"",
                         selectionArgs,null, null, sortOrder);
-                /**
-                 * register to watch a content URI for changes
-                 */
+
                 c.setNotificationUri(getContext().getContentResolver(), uri);
+                break;
+            default:
+                SQLiteQueryBuilder qb1 = new SQLiteQueryBuilder();
+                qb1.setTables(TASK_TABLE_NAME);
+                qb1.setProjectionMap(STUDENTS_4PRO
+                        JECTION_MAP);
+
+                c = qb1.query(db, projection,	"",
+                        selectionArgs,null, null, sortOrder);
+
+                c.setNotificationUri(getContext().getContentResolver(), uri);
+
+//                String singleSelectQuery = "SELECT * FROM "+ TASK_TABLE_NAME +"  WHERE assignedto =\""+ selection+"\"" ;
+//                c = db.rawQuery(singleSelectQuery, null);
                 break;
 
         }
+
+//        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+//        qb.setTables(TASK_TABLE_NAME);
+//        qb.setProjectionMap(STUDENTS_PROJECTION_MAP);
+//
+//        c = qb.query(db, projection,	selection,
+//                selectionArgs,null, null, sortOrder);
+//        /**
+//         * register to watch a content URI for changes
+//         */
+//        c.setNotificationUri(getContext().getContentResolver(), uri);
+
         return c;
     }
 

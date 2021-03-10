@@ -17,11 +17,10 @@
                 android:id="@+id/edit_log_no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter Log No....."
+                android:hint="Enter Sl no..."
                 android:textSize="18dp"
                 android:padding="10dp"
                 android:layout_marginTop="10dp"
-                android:visibility="gone"
                 />
 
             <EditText

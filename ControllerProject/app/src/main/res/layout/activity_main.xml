@@ -116,9 +116,9 @@
 
 
             <RelativeLayout
+                android:id="@+id/relative_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/text_show"
                 >
@@ -144,6 +144,19 @@
 
                     />
             </RelativeLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="New Task"
+                android:textAllCaps="false"
+                android:textSize="18dp"
+                android:layout_below="@+id/relative_layout"
+                android:layout_marginTop="20dp"
+                android:onClick="OnNewTaskClick"
+
+
+                />
 
 
 

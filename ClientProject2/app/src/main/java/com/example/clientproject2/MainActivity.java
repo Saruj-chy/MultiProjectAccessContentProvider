@@ -16,7 +16,6 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
-
     static final String PROVIDER_NAME = "com.example.controllerproject.ControllerProvider";
     static final String LOG_URL = "content://" + PROVIDER_NAME + "/logtable";
     static final Uri LOG_TABLE_URI = Uri.parse(LOG_URL);
@@ -52,9 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
         initialize();
 
-        getAllEditText();
-
-        onDataShow( mAssignedTo) ;
+//        getAllEditText();
+//        onDataShow( mAssignedTo) ;
 
     }
 
@@ -144,12 +142,45 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void OnNewTaskClick(View v){
+        Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));
+        Cursor cursor = managedQuery(students, null, "new_task", null, "");
+
+        String sl = null;
+        if (cursor.moveToFirst()) {
+            sl = cursor.getString(cursor.getColumnIndex(SL));
+        }
+
+        long currentTime = Calendar.getInstance().getTimeInMillis();
+
+        getAllEditText();
+
+        ContentValues values = new ContentValues() ;
+        values.put(ASSIGNEDTO, "c1");
+        values.put(ASSIGNDATETIME, currentTime);
+//        values.put(ControllerProvider.COMPLETEDATETIME, 0);
+//        values.put(ControllerProvider.ISCOMPLETE, 0);
+
+//        Uri students = Uri.parse(URL);
+        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl=\""+ sl +"\"", null) ;
+
+//        Toast.makeText(this, " update ", Toast.LENGTH_SHORT).show();
+        mShowTextView.setText("updated assignedto no "+ mAssignedTo);
+
+        LogTableUri(mAssignedTo, mMsg, mAssignedTo +" updated by Controller", currentTime ) ;
+
+//        ClearAllText();
+
+//        Toast.makeText(this, "Processing", Toast.LENGTH_SHORT).show();
+
+    }
+
 
 
     public void OnShowClick(View v){
         getAllEditText();
 
-        onDataShow( "c1") ;
+        onDataShow( mAssignedTo) ;
 
         ClearAllText();
     }

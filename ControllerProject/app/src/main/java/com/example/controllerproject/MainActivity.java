@@ -94,6 +94,47 @@ public class MainActivity extends AppCompatActivity {
 //        Toast.makeText(this, "Processing", Toast.LENGTH_SHORT).show();
 
     }
+
+    public void OnNewTaskClick(View v){
+
+        Uri students = Uri.parse(String.valueOf(ControllerProvider.TASK_TABLE_URI));
+        Cursor cursor = managedQuery(students, null, "new_task", null, "");
+
+        String sl = null;
+        if (cursor.moveToFirst()) {
+            sl = cursor.getString(cursor.getColumnIndex(ControllerProvider.SL));
+        }
+
+        Toast.makeText(this, "sl"+sl, Toast.LENGTH_SHORT).show();
+
+
+
+
+
+        long currentTime = Calendar.getInstance().getTimeInMillis();
+//
+        getAllEditText();
+
+        ContentValues values = new ContentValues() ;
+        values.put(ControllerProvider.ASSIGNEDTO, "c1");
+        values.put(ControllerProvider.ASSIGNDATETIME, currentTime);
+        values.put(ControllerProvider.COMPLETEDATETIME, 0);
+        values.put(ControllerProvider.ISCOMPLETE, 0);
+
+        int c= getContentResolver().update(ControllerProvider.TASK_TABLE_URI, values, "sl=\""+ sl +"\"", null) ;
+
+        Toast.makeText(this, " update ", Toast.LENGTH_SHORT).show();
+        mShowTextView.setText("updated assignedto no "+ mAssignedTo);
+
+        LogTableUri(mAssignedTo, mMsg, mAssignedTo +" updated by Controller", currentTime ) ;
+
+//        ClearAllText();
+
+//        Toast.makeText(this, "Processing", Toast.LENGTH_SHORT).show();
+
+    }
+
+
     public void OnAssignedClick(View v){
         long currentTime = Calendar.getInstance().getTimeInMillis();
 
@@ -155,10 +196,14 @@ public class MainActivity extends AppCompatActivity {
     public void OnShowClick(View v){
 
         Uri students = Uri.parse(String.valueOf(ControllerProvider.TASK_TABLE_URI));
-        Cursor c = managedQuery(students, null, null, null, "");
+        Cursor c = managedQuery(students, null, "c1", null, "");
+
+        Log.e("count", c.getCount() +"") ;
+//        Log.e("task", c.getString(c.getColumnIndex(ControllerProvider.MSG)) ) ;
 
         StringBuilder stringBuilder = new StringBuilder();
         if (c.moveToFirst()) {
+//            Log.e("task", c.getString(c.getColumnIndex(ControllerProvider.MSG)) ) ;
             do{
                 stringBuilder.append(" MSG: "+c.getString(c.getColumnIndex(ControllerProvider.MSG)) +
                         " \n assignedto: " +  c.getString(c.getColumnIndex( ControllerProvider.ASSIGNEDTO)) +
@@ -169,8 +214,7 @@ public class MainActivity extends AppCompatActivity {
                         " \n \n"    );
             } while (c.moveToNext());
         }
-
-        mShowTextView.setText(stringBuilder);
+        mShowTextView.setText(stringBuilder) ;
 //
 //        getAllEditText();
 //

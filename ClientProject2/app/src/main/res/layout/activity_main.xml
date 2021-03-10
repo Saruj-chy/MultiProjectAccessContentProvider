@@ -17,11 +17,10 @@
                 android:id="@+id/edit_log_no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter Log No....."
+                android:hint="Enter Sl no..."
                 android:textSize="18dp"
                 android:padding="10dp"
                 android:layout_marginTop="10dp"
-                android:visibility="gone"
                 />
 
             <EditText
@@ -118,10 +117,12 @@
                 />
 
 
+
+
             <RelativeLayout
+                android:id="@+id/relative_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/text_show"
                 >
@@ -147,6 +148,16 @@
 
                     />
             </RelativeLayout>
+
+            <Button
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Task"
+                android:textSize="18dp"
+                android:layout_below="@+id/relative_layout"
+                android:onClick="OnNewTaskClick"
+                />
 
 
         </RelativeLayout>

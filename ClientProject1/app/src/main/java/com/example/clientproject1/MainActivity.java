@@ -143,25 +143,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void OnNewTaskClick(View v){
+        Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));
+        Cursor cursor = managedQuery(students, null, "new_task", null, "");
+
+        String sl = null;
+        if (cursor.moveToFirst()) {
+            sl = cursor.getString(cursor.getColumnIndex(SL));
+        }
+
         long currentTime = Calendar.getInstance().getTimeInMillis();
 
         getAllEditText();
 
-        ContentValues values = new ContentValues();
-        values.put(ASSIGNEDTO, mAssignedTo);
+        ContentValues values = new ContentValues() ;
+        values.put(ASSIGNEDTO, "c1");
         values.put(ASSIGNDATETIME, currentTime);
-//        values.put(ISCOMPLETE, 1);
+//        values.put(ControllerProvider.COMPLETEDATETIME, 0);
+//        values.put(ControllerProvider.ISCOMPLETE, 0);
 
 //        Uri students = Uri.parse(URL);
-        int c= getContentResolver().update(TASK_TABLE_URI, values, "assignedto=\""+ mAssignedTo +"\"", null) ;
+        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl=\""+ sl +"\"", null) ;
 
-        Toast.makeText(this, " complete "+c+"  "+ mAssignedTo, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, " update ", Toast.LENGTH_SHORT).show();
+        mShowTextView.setText("updated assignedto no "+ mAssignedTo);
 
-        mShowTextView.setText("completeddatetime updated by c1");
+        LogTableUri(mAssignedTo, mMsg, mAssignedTo +" updated by Controller", currentTime ) ;
 
-        LogTableUri(mAssignedTo, mMsg, " completeddatetime updated by c1", currentTime ) ;
+//        ClearAllText();
 
-        ClearAllText();
+//        Toast.makeText(this, "Processing", Toast.LENGTH_SHORT).show();
 
     }
 
