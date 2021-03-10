@@ -29,7 +29,7 @@
                 android:id="@+id/edit_src"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter Src Name....."
+                android:hint="Assigned to..."
                 android:textSize="18dp"
                 android:padding="10dp"
                 android:layout_marginTop="20dp"
@@ -40,7 +40,7 @@
                 android:id="@+id/edit_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter your data....."
+                android:hint="Enter your msg....."
                 android:textSize="18dp"
                 android:padding="10dp"
                 android:layout_marginTop="20dp"
@@ -70,6 +70,7 @@
                 android:layout_below="@+id/btn_insert"
                 android:layout_marginTop="20dp"
                 android:onClick="OnUpdateClick"
+                android:visibility="gone"
 
                 />
 
@@ -112,6 +113,37 @@
 
                 android:layout_marginLeft="30dp"
                 />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/text_show"
+                >
+                <Button
+                    android:id="@+id/btn_assigned"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Assigned"
+                    android:textSize="18dp"
+                    android:layout_alignParentLeft="true"
+                    android:onClick="OnAssignedClick"
+
+                    />
+
+                <Button
+                    android:id="@+id/btn_completed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Completed"
+                    android:textSize="18dp"
+                    android:layout_alignParentRight="true"
+                    android:onClick="OnCompletedClick"
+
+                    />
+            </RelativeLayout>
 
 
         </RelativeLayout>

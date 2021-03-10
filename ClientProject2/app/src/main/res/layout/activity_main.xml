@@ -6,106 +6,150 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-        <EditText
-            android:id="@+id/edit_project_no"
+        android:layout_height="match_parent">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Project No....."
-            android:textSize="18dp"
-            android:padding="10dp"
-            android:layout_marginTop="10dp"
-            />
+            android:layout_height="match_parent"
+            >
+            <EditText
+                android:id="@+id/edit_log_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter Log No....."
+                android:textSize="18dp"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                />
 
-        <EditText
-            android:id="@+id/edit_project_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Project Name....."
-            android:textSize="18dp"
-            android:padding="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/edit_project_no"
-            />
+            <EditText
+                android:id="@+id/edit_src"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="c2"
+                android:text="c2"
+                android:textSize="18dp"
+                android:padding="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/edit_log_no"
+                android:clickable="false"
+                android:editable="false"
+                />
 
-        <EditText
-            android:id="@+id/edit_project_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Project Status....."
-            android:textSize="18dp"
-            android:padding="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/edit_project_name"
-            />
+            <EditText
+                android:id="@+id/edit_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter your msg....."
+                android:textSize="18dp"
+                android:padding="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/edit_src"
+                />
 
-        <Button
-            android:id="@+id/btn_insert"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Insert"
-            android:textAllCaps="false"
-            android:textSize="18dp"
-            android:layout_below="@+id/edit_project_status"
-            android:layout_marginTop="20dp"
-            android:onClick="OnInsertClick"
+            <Button
+                android:id="@+id/btn_insert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Insert"
+                android:textAllCaps="false"
+                android:textSize="18dp"
+                android:layout_below="@+id/edit_data"
+                android:layout_marginTop="20dp"
+                android:onClick="OnInsertClick"
+                android:visibility="gone"
 
-            />
+                />
 
-        <Button
-            android:id="@+id/btn_update"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Update Based on Project No"
-            android:textAllCaps="false"
-            android:textSize="18dp"
-            android:layout_below="@+id/btn_insert"
-            android:layout_marginTop="20dp"
-            android:onClick="OnUpdateClick"
+            <Button
+                android:id="@+id/btn_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Update Based on Project No"
+                android:textAllCaps="false"
+                android:textSize="18dp"
+                android:layout_below="@+id/btn_insert"
+                android:layout_marginTop="20dp"
+                android:onClick="OnUpdateClick"
 
-            />
+                />
 
-        <Button
-            android:id="@+id/btn_delete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Delete Based on Project No"
-            android:textAllCaps="false"
-            android:textSize="18dp"
-            android:layout_below="@+id/btn_update"
-            android:layout_marginTop="20dp"
-            android:onClick="OnDeleteClick"
+            <Button
+                android:id="@+id/btn_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Delete Based on Project No"
+                android:textAllCaps="false"
+                android:textSize="18dp"
+                android:layout_below="@+id/btn_update"
+                android:layout_marginTop="20dp"
+                android:onClick="OnDeleteClick"
+                android:visibility="gone"
 
-            />
+                />
 
-        <Button
-            android:id="@+id/btn_show"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Show Data Based on Project No."
-            android:textAllCaps="false"
-            android:textSize="18dp"
-            android:layout_below="@+id/btn_delete"
-            android:layout_marginTop="20dp"
-            android:onClick="OnShowClick"
+            <Button
+                android:id="@+id/btn_show"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Show Data Based on Project No."
+                android:textAllCaps="false"
+                android:textSize="18dp"
+                android:layout_below="@+id/btn_delete"
+                android:layout_marginTop="20dp"
+                android:onClick="OnShowClick"
 
-            />
+                />
 
-        <TextView
-            android:id="@+id/text_show"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:layout_below="@id/btn_show"
-            android:gravity="center"
-            />
+            <TextView
+                android:id="@+id/text_show"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="18dp"
+                android:textColor="@color/black"
+
+                android:textStyle="bold"
+                android:layout_below="@id/btn_show"
+
+                android:layout_marginLeft="30dp"
+                />
 
 
-    </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/text_show"
+                >
+                <Button
+                    android:id="@+id/btn_assigned"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Assigned"
+                    android:textSize="18dp"
+                    android:layout_alignParentLeft="true"
+                    android:onClick="OnAssignedClick"
+
+                    />
+
+                <Button
+                    android:id="@+id/btn_completed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Completed"
+                    android:textSize="18dp"
+                    android:layout_alignParentRight="true"
+                    android:onClick="OnCompletedClick"
+
+                    />
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

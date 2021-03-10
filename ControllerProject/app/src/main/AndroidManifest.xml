@@ -21,6 +21,10 @@
             android:name=".ControllerProvider"
             android:authorities="com.example.controllerproject.ControllerProvider"
             android:exported="true" />
+        <provider
+            android:name=".ControllerProvider2"
+            android:authorities="com.example.controllerproject.ControllerProvider2"
+            android:exported="true" />
 
 
     </application>

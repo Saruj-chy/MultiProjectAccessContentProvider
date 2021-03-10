@@ -15,14 +15,14 @@ import android.util.Log;
 
 import java.util.HashMap;
 
-public class ControllerProvider extends ContentProvider {
-    static final String PROVIDER_NAME = "com.example.controllerproject.ControllerProvider";
-    static final String LOG_URL = "content://" + PROVIDER_NAME + "/logtable";
+public class ControllerProvider2 extends ContentProvider {
+    static final String PROVIDER_NAME = "com.example.controllerproject.ControllerProvider2";
+    static final String LOG_URL = "content://" + PROVIDER_NAME + "/tasktable";
     static final Uri LOG_TABLE_URI = Uri.parse(LOG_URL);
-    static final String TASK_URL = "content://" + PROVIDER_NAME + "/tasktable";
-    static final Uri TASK_TABLE_URI = Uri.parse(TASK_URL);
+//    static final String TASK_URL = "content://" + PROVIDER_NAME + "/tasktable";
+//    static final Uri TASK_TABLE_URI = Uri.parse(TASK_URL);
 
-//    static final String ID = "id";
+    //    static final String ID = "id";
     static final String LOGNO = "logno";
     static final String SRC = "src";
     static final String ACTIONS = "actions";
@@ -42,31 +42,30 @@ public class ControllerProvider extends ContentProvider {
 
     static final int LOGTABLES = 1;
     static final int LOGTABLE_ID = 2;
-    static final int TASKTABLES = 1;
-    static final int TASKTABLE_ID = 2;
+//    static final int TASKTABLES = 1;
+//    static final int TASKTABLE_ID = 2;
 
     static final UriMatcher uriMatcher;
     static{
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(PROVIDER_NAME, "logtable", LOGTABLES);
-        uriMatcher.addURI(PROVIDER_NAME, "logtable/s#", LOGTABLE_ID);
-        uriMatcher.addURI(PROVIDER_NAME, "tasktable", TASKTABLES);
-        uriMatcher.addURI(PROVIDER_NAME, "tasktable/s#", TASKTABLE_ID);
+        uriMatcher.addURI(PROVIDER_NAME, "tasktable", LOGTABLES);
+        uriMatcher.addURI(PROVIDER_NAME, "tasktable/s#", LOGTABLE_ID);
+//        uriMatcher.addURI(PROVIDER_NAME, "tasktable", TASKTABLES);
+//        uriMatcher.addURI(PROVIDER_NAME, "tasktable/s#", TASKTABLE_ID);
     }
 
     private SQLiteDatabase db;
-    static final String DATABASE_NAME = "TASKLOG";
-    static final String LOG_TABLE_NAME = "log_table";
+    static final String DATABASE_NAME = "TaskControllers";
     static final String TASK_TABLE_NAME = "task_table";
 
     static final int DATABASE_VERSION = 1;
-    static final String CREATE_LOG_TABLE =
-            " CREATE TABLE " + LOG_TABLE_NAME +
-                    " ("+ LOGNO + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    SRC + " TEXT NOT NULL, " +
-                    ACTIONS + " TEXT , " +
-                    DATA + " TEXT NOT NULL, " +
-                    TIMESTAMP+" INTEGER NOT NULL);" ;
+//    static final String CREATE_LOG_TABLE =
+//            " CREATE TABLE " + LOG_TABLE_NAME +
+//                    " ("+ SL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//                    MSG + " TEXT NOT NULL, " +
+//                    ACTIONS + " TEXT , " +
+//                    DATA + " TEXT NOT NULL, " +
+//                    TIMESTAMP+" INTEGER NOT NULL);" ;
 
     static final String CREATE_TASK_TABLE =
             " CREATE TABLE " + TASK_TABLE_NAME +
@@ -78,6 +77,7 @@ public class ControllerProvider extends ContentProvider {
                     COMPLETEDATETIME + " TEXT NOT NULL, " +
                     ISCOMPLETE + " TEXT NOT NULL);" ;
 
+
     private static class DatabaseHelper extends SQLiteOpenHelper {
         DatabaseHelper(Context context){
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -85,14 +85,13 @@ public class ControllerProvider extends ContentProvider {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL(CREATE_LOG_TABLE);
-
+//            db.execSQL(CREATE_LOG_TABLE);
             db.execSQL(CREATE_TASK_TABLE);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " + LOG_TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + TASK_TABLE_NAME);
             onCreate(db);
         }
     }
@@ -107,18 +106,18 @@ public class ControllerProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        long log_table_ID = db.insert(LOG_TABLE_NAME, "", values);
-        long task_table_ID = db.insert(TASK_TABLE_NAME, "", values);
+        long log_table_ID = db.insert(TASK_TABLE_NAME, "", values);
+//        long task_table_ID = db.insert(TASK_TABLE_NAME, "", values);
         if (log_table_ID > 0) {
             Uri log_uri = ContentUris.withAppendedId(LOG_TABLE_URI, log_table_ID);
             getContext().getContentResolver().notifyChange(log_uri, null);
             return log_uri;
         }
-        if (task_table_ID > 0) {
-            Uri task_uri = ContentUris.withAppendedId(TASK_TABLE_URI, task_table_ID);
-            getContext().getContentResolver().notifyChange(task_uri, null);
-            return task_uri;
-        }
+//        if (task_table_ID > 0) {
+//            Uri task_uri = ContentUris.withAppendedId(TASK_TABLE_URI, task_table_ID);
+//            getContext().getContentResolver().notifyChange(task_uri, null);
+//            return task_uri;
+//        }
 
         Log.e("inserturi", log_table_ID+" "+ uri) ;
 
@@ -132,7 +131,7 @@ public class ControllerProvider extends ContentProvider {
         Log.e("query", selection+" :s: "+ sortOrder) ;
         String selectQuery ;
 
-        selectQuery = "SELECT  * FROM  "+ TASK_TABLE_NAME +" WHERE assignedto = \""+selection+"\" "  ;
+        selectQuery = "SELECT  * FROM  "+ TASK_TABLE_NAME +" WHERE assignedto = "+selection  ;
 //        if(selection.equalsIgnoreCase("")) {
 //            selection = String.valueOf(1);
 //        }
@@ -151,13 +150,13 @@ public class ControllerProvider extends ContentProvider {
         int count = 0;
         switch (uriMatcher.match(uri)){
             case LOGTABLES:
-                count = db.delete(LOG_TABLE_NAME, selection, selectionArgs);
+                count = db.delete(TASK_TABLE_NAME, selection, selectionArgs);
                 break;
 
             case LOGTABLE_ID:
                 String log_no = uri.getPathSegments().get(2);
-                count = db.delete(LOG_TABLE_NAME, LOGNO +  " = " + log_no +
-                                (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
+                count = db.delete(TASK_TABLE_NAME, LOGNO +  " = " + log_no +
+                        (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -172,13 +171,13 @@ public class ControllerProvider extends ContentProvider {
                       String selection, String[] selectionArgs) {
         int count = 0;
         switch (uriMatcher.match(uri)) {
-            case TASKTABLES:
+            case LOGTABLES:
                 count = db.update(TASK_TABLE_NAME, values, selection, selectionArgs);
                 break;
 
-            case TASKTABLE_ID:
+            case LOGTABLE_ID:
                 count = db.update(TASK_TABLE_NAME, values,
-                        SL + " = " + uri.getPathSegments().get(1) +
+                        LOGNO + " = " + uri.getPathSegments().get(1) +
                                 (!TextUtils.isEmpty(selection) ? " AND (" +selection + ')' : ""), selectionArgs);
                 break;
             default:
