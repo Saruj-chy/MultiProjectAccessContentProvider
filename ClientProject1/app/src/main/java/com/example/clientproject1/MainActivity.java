@@ -142,6 +142,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void OnNewTaskClick(View v){
+        long currentTime = Calendar.getInstance().getTimeInMillis();
+
+        getAllEditText();
+
+        ContentValues values = new ContentValues();
+        values.put(ASSIGNEDTO, mAssignedTo);
+        values.put(ASSIGNDATETIME, currentTime);
+//        values.put(ISCOMPLETE, 1);
+
+//        Uri students = Uri.parse(URL);
+        int c= getContentResolver().update(TASK_TABLE_URI, values, "assignedto=\""+ mAssignedTo +"\"", null) ;
+
+        Toast.makeText(this, " complete "+c+"  "+ mAssignedTo, Toast.LENGTH_SHORT).show();
+
+        mShowTextView.setText("completeddatetime updated by c1");
+
+        LogTableUri(mAssignedTo, mMsg, " completeddatetime updated by c1", currentTime ) ;
+
+        ClearAllText();
+
+    }
+
 
 
     public void OnShowClick(View v){

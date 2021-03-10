@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -34,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         long currentTime = Calendar.getInstance().getTimeInMillis();
         Log.e("TAG", "currentTime1: "+currentTime) ;
 
-
         getAllEditText();
 
         LogTableUri(mAssignedTo, mMsg, mAssignedTo +" inserted by Controller", currentTime ) ;
@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
         task_Values.put(ControllerProvider.MSG, mMsg);
         task_Values.put(ControllerProvider.ASSIGNEDTO, mAssignedTo);
         task_Values.put(ControllerProvider.ENTRYDATETIME, currentTime);
-        task_Values.put(ControllerProvider.ASSIGNDATETIME, 0+"" );
-        task_Values.put(ControllerProvider.COMPLETEDATETIME, 0+"" );
-        task_Values.put(ControllerProvider.ISCOMPLETE, 0+"" );
+        task_Values.put(ControllerProvider.ASSIGNDATETIME, 0 );
+        task_Values.put(ControllerProvider.COMPLETEDATETIME, 0 );
+        task_Values.put(ControllerProvider.ISCOMPLETE, 0 );
 
         Uri task_uri = getContentResolver().insert( ControllerProvider.TASK_TABLE_URI, task_Values);
         Log.e("TAG", "task_uri: "+task_uri) ;
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 //        mShowTextView.setText("Inserted log no "+ mLogNo);
 //
 //        Log.e("TAG", "uri: "+uri) ;
-        ClearAllText();
+//        ClearAllText();
 
     }
 
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         LogTableUri(mAssignedTo, mMsg, mAssignedTo +" updated by Controller", currentTime ) ;
 
-        ClearAllText();
+//        ClearAllText();
 
 //        Toast.makeText(this, "Processing", Toast.LENGTH_SHORT).show();
 
@@ -113,86 +113,102 @@ public class MainActivity extends AppCompatActivity {
 
         LogTableUri(mAssignedTo, mMsg, "assigndatetime updated by Controller", currentTime ) ;
 
-        ClearAllText();
+//        ClearAllText();
 
 //        Toast.makeText(this, "Processing", Toast.LENGTH_SHORT).show();
 
     }
     public void OnCompletedClick(View v){
-        long currentTime = Calendar.getInstance().getTimeInMillis();
 
-        getAllEditText();
 
-        ContentValues values = new ContentValues();
-//        values.put(ControllerProvider.MSG, mMsg);
-        values.put(ControllerProvider.COMPLETEDATETIME, currentTime);
-        values.put(ControllerProvider.ISCOMPLETE, 1);
-
-//        Uri students = Uri.parse(URL);
-        int c= getContentResolver().update(ControllerProvider.TASK_TABLE_URI, values, "assignedto=\""+ mAssignedTo +"\"", null) ;
-
-        mShowTextView.setText("completeddatetime updated by Controller  ");
-
-        LogTableUri(mAssignedTo, mMsg, " completeddatetime updated by Controller", currentTime ) ;
-
-        ClearAllText();
-
-//        Toast.makeText(this, "Processing", Toast.LENGTH_SHORT).show();
+//        long currentTime = Calendar.getInstance().getTimeInMillis();
+//
+//        getAllEditText();
+//
+//        ContentValues values = new ContentValues();
+////        values.put(ControllerProvider.MSG, mMsg);
+//        values.put(ControllerProvider.COMPLETEDATETIME, currentTime);
+//        values.put(ControllerProvider.ISCOMPLETE, 1);
+//
+////        Uri students = Uri.parse(URL);
+//        int c= getContentResolver().update(ControllerProvider.TASK_TABLE_URI, values, "assignedto=\""+ mAssignedTo +"\"", null) ;
+//
+//        mShowTextView.setText("completeddatetime updated by Controller  ");
+//
+//        LogTableUri(mAssignedTo, mMsg, " completeddatetime updated by Controller", currentTime ) ;
+//
+////        ClearAllText();
+//
+////        Toast.makeText(this, "Processing", Toast.LENGTH_SHORT).show();
 
     }
 
     public void OnDeleteClick(View v){
 
         getAllEditText();
-
-//        ContentValues values = new ContentValues();
-//        values.put(ControllerProvider.LOGNO, mLogNo);
-//        values.put(ControllerProvider.SRC, mSrc);
-//        values.put(ControllerProvider.DATA, mData);
-//        values.put(ControllerProvider.ACTIONS, "Client1 inserted by Controller");
-
-//        Uri students = Uri.parse(URL);
-//        int c= getContentResolver().update(ControllerProvider.CONTENT_URI, values, "project_no="+mProjectNo, null) ;
         int c= getContentResolver().delete(ControllerProvider.LOG_TABLE_URI, "assignedto=\""+ mAssignedTo +"\"", null) ;
+        mShowTextView.setText("deleted assignedto "+ mAssignedTo);
 
-//        Toast.makeText(this, " Delete Project No "+ mProjectNo, Toast.LENGTH_SHORT).show();
-        mShowTextView.setText("deleted logno "+ mLogNo);
-
-        ClearAllText();
-
-//        Toast.makeText(this, "Processing", Toast.LENGTH_SHORT).show();
-
-
+//        ClearAllText();
     }
 
     public void OnShowClick(View v){
-        // Retrieve student records
-//        String URL = "content://com.example.contentproviderproject01.StudentsProvider";
-
-        getAllEditText();
 
         Uri students = Uri.parse(String.valueOf(ControllerProvider.TASK_TABLE_URI));
-        Cursor c = managedQuery(students, null, mAssignedTo, null, "");
+        Cursor c = managedQuery(students, null, null, null, "");
 
+        StringBuilder stringBuilder = new StringBuilder();
         if (c.moveToFirst()) {
             do{
-
-                mShowTextView.setText(" MSG: "+c.getString(c.getColumnIndex(ControllerProvider.MSG)) +
+                stringBuilder.append(" MSG: "+c.getString(c.getColumnIndex(ControllerProvider.MSG)) +
                         " \n assignedto: " +  c.getString(c.getColumnIndex( ControllerProvider.ASSIGNEDTO)) +
                         " \n entrydatetime: " + c.getString(c.getColumnIndex( ControllerProvider.ENTRYDATETIME ))+
                         " \n assigndatetime: " + c.getString(c.getColumnIndex( ControllerProvider.ASSIGNDATETIME ))+
                         " \n Complete datetime: " + c.getString(c.getColumnIndex( ControllerProvider.COMPLETEDATETIME ))+
-                        " \n isComplete: " + c.getString(c.getColumnIndex( ControllerProvider.ISCOMPLETE )));
-
-//                Toast.makeText(this,
-//                        c.getString(c.getColumnIndex(ControllerProvider.PROJECT_NO)) +
-//                                " \n" +  c.getString(c.getColumnIndex( ControllerProvider.PROJECT_NAME)) +
-//                                " \n" + c.getString(c.getColumnIndex( ControllerProvider.PROJECT_STATUS )),
-//                        Toast.LENGTH_SHORT).show();
+                        " \n isComplete: " + c.getString(c.getColumnIndex( ControllerProvider.ISCOMPLETE ))+
+                        " \n \n"    );
             } while (c.moveToNext());
         }
 
-        ClearAllText();
+        mShowTextView.setText(stringBuilder);
+//
+//        getAllEditText();
+//
+//        Uri students = Uri.parse(String.valueOf(ControllerProvider.TASK_TABLE_URI));
+//        Cursor c = managedQuery(students, null, null, null, "");
+//
+//        Log.e("count", c.getCount() +"") ;
+//
+////        while (c.isAfterLast() == false) {
+////            String Title = c.getString(c.getColumnIndex(ControllerProvider.ASSIGNEDTO));
+////            Log.e("MSG"," MSG: "+ Title ) ;
+////
+//////            stringList.add(Title); //This I use to create listlayout dynamically and show all the Titles in it
+////            c.moveToNext();
+////        }
+//
+//        while (!c.isAfterLast()) {
+//            Log.e("MSG"," MSG: " + c.isAfterLast()) ;
+//            c.moveToNext();
+//        }
+//
+//
+//        if (c.moveToFirst()) {
+//            Log.e("MSG"," MSG c: " ) ;
+//            do{
+////
+//                mShowTextView.setText(" MSG: "+c.getString(c.getColumnIndex(ControllerProvider.MSG)) +
+//                        " \n assignedto: " +  c.getString(c.getColumnIndex( ControllerProvider.ASSIGNEDTO)) +
+//                        " \n entrydatetime: " + c.getString(c.getColumnIndex( ControllerProvider.ENTRYDATETIME ))+
+//                        " \n assigndatetime: " + c.getString(c.getColumnIndex( ControllerProvider.ASSIGNDATETIME ))+
+//                        " \n Complete datetime: " + c.getString(c.getColumnIndex( ControllerProvider.COMPLETEDATETIME ))+
+//                        " \n isComplete: " + c.getString(c.getColumnIndex( ControllerProvider.ISCOMPLETE )));
+//                Log.e("MSG"," MSG inside: " ) ;
+//
+//            } while (c.moveToNext());
+//        }
+
+//        ClearAllText();
 
     }
 

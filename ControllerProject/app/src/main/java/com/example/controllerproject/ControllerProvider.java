@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -29,6 +30,9 @@ public class ControllerProvider extends ContentProvider {
     static final String DATA = "data";
     static final String TIMESTAMP = "timestamp";
 
+
+    private static HashMap<String, String> STUDENTS_PROJECTION_MAP;
+
     //  task table
     static final String SL = "sl";
     static final String MSG = "msg";
@@ -38,24 +42,8 @@ public class ControllerProvider extends ContentProvider {
     static final String COMPLETEDATETIME = "completedatetime";
     static final String ISCOMPLETE = "icComplete";
 
-    private static HashMap<String, String> STUDENTS_PROJECTION_MAP;
-
-    static final int LOGTABLES = 1;
-    static final int LOGTABLE_ID = 2;
-    static final int TASKTABLES = 1;
-    static final int TASKTABLE_ID = 2;
-
-    static final UriMatcher uriMatcher;
-    static{
-        uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(PROVIDER_NAME, "logtable", LOGTABLES);
-        uriMatcher.addURI(PROVIDER_NAME, "logtable/s#", LOGTABLE_ID);
-        uriMatcher.addURI(PROVIDER_NAME, "tasktable", TASKTABLES);
-        uriMatcher.addURI(PROVIDER_NAME, "tasktable/s#", TASKTABLE_ID);
-    }
-
     private SQLiteDatabase db;
-    static final String DATABASE_NAME = "TASKLOG";
+    static final String DATABASE_NAME = "TASKLOGTABLE";
     static final String LOG_TABLE_NAME = "log_table";
     static final String TASK_TABLE_NAME = "task_table";
 
@@ -72,11 +60,11 @@ public class ControllerProvider extends ContentProvider {
             " CREATE TABLE " + TASK_TABLE_NAME +
                     " ("+ SL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     MSG + " TEXT NOT NULL, " +
-                    ASSIGNEDTO + " TEXT NOT NULL, " +
-                    ENTRYDATETIME + " TEXT NOT NULL, " +
-                    ASSIGNDATETIME + " TEXT NOT NULL, " +
-                    COMPLETEDATETIME + " TEXT NOT NULL, " +
-                    ISCOMPLETE + " TEXT NOT NULL);" ;
+                    ASSIGNEDTO + " INTEGER NOT NULL, " +
+                    ENTRYDATETIME + " INTEGER NOT NULL, " +
+                    ASSIGNDATETIME + " INTEGER NOT NULL, " +
+                    COMPLETEDATETIME + " INTEGER NOT NULL, " +
+                    ISCOMPLETE + " INTEGER NOT NULL);" ;
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
         DatabaseHelper(Context context){
@@ -125,43 +113,95 @@ public class ControllerProvider extends ContentProvider {
         throw new SQLException("Failed to add a record into " + uri);
     }
 
+//    @Override
+//    public Cursor query(Uri uri, String[] projection,
+//                        String selection, String[] selectionArgs, String sortOrder) {
+//
+//        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+//        qb.setTables(TASK_TABLE_NAME);
+//
+//        qb.setProjectionMap(STUDENTS_PROJECTION_MAP);
+//
+////        switch (uriMatcher.match(uri)) {
+////            case STUDENTS:
+////                qb.setProjectionMap(STUDENTS_PROJECTION_MAP);
+////                break;
+////
+////            case STUDENT_ID:
+////                qb.appendWhere( _ID + "=" + uri.getPathSegments().get(1));
+////                break;
+////
+////            default:
+////        }
+//
+////        if (sortOrder == null || sortOrder == ""){
+////            /**
+////             * By default sort on student names
+////             */
+////            sortOrder = NAME;
+////        }
+//
+//        Cursor c = qb.query(db,	projection,	selection,
+//                selectionArgs,null, null, sortOrder);
+//        /**
+//         * register to watch a content URI for changes
+//         */
+//        c.setNotificationUri(getContext().getContentResolver(), uri);
+//        return c;
+//
+//
+//
+////
+////
+////        Log.e("query", selection+" :s: "+ sortOrder) ;
+////        String selectQuery ;
+////
+//////        selectQuery = "SELECT  * FROM  "+ TASK_TABLE_NAME +" WHERE assignedto = \""+selection+"\" "  ;
+////        selectQuery = "SELECT  * FROM  "+ TASK_TABLE_NAME   ;
+//////        if(selection.equalsIgnoreCase("")) {
+//////            selection = String.valueOf(1);
+//////        }
+//////        if(!sortOrder.equalsIgnoreCase("")){
+//////
+//////        }else{
+//////            selectQuery = "SELECT  * FROM  "+ LOG_TABLE_NAME +" WHERE logno = "+selection+" " ;
+//////        }
+////        Cursor c = db.rawQuery(selectQuery, null);
+////        c.setNotificationUri(getContext().getContentResolver(), uri);
+////        return c;
+//    }
+
     @Override
     public Cursor query(Uri uri, String[] projection,
-                        String selection, String[] selectionArgs, String sortOrder) {
+                        String selection,String[] selectionArgs, String sortOrder) {
 
-        Log.e("query", selection+" :s: "+ sortOrder) ;
-        String selectQuery ;
+        Cursor c;
+        switch (selection){
+            case "new_task":
+                String selectQuery = "SELECT * FROM "+ TASK_TABLE_NAME +"  WHERE `assignedto` = \"\" ORDER BY sl ASC LIMIT 1" ;
+                c = db.rawQuery(selectQuery, null);
+                break;
+            default:
+                SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+                qb.setTables(TASK_TABLE_NAME);
+                qb.setProjectionMap(STUDENTS_PROJECTION_MAP);
 
-        selectQuery = "SELECT  * FROM  "+ TASK_TABLE_NAME +" WHERE assignedto = \""+selection+"\" "  ;
-//        if(selection.equalsIgnoreCase("")) {
-//            selection = String.valueOf(1);
-//        }
-//        if(!sortOrder.equalsIgnoreCase("")){
-//
-//        }else{
-//            selectQuery = "SELECT  * FROM  "+ LOG_TABLE_NAME +" WHERE logno = "+selection+" " ;
-//        }
-        Cursor c = db.rawQuery(selectQuery, null);
-        c.setNotificationUri(getContext().getContentResolver(), uri);
+                c = qb.query(db,	projection,	selection,
+                        selectionArgs,null, null, sortOrder);
+                /**
+                 * register to watch a content URI for changes
+                 */
+                c.setNotificationUri(getContext().getContentResolver(), uri);
+                break;
+
+        }
         return c;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         int count = 0;
-        switch (uriMatcher.match(uri)){
-            case LOGTABLES:
-                count = db.delete(LOG_TABLE_NAME, selection, selectionArgs);
-                break;
-
-            case LOGTABLE_ID:
-                String log_no = uri.getPathSegments().get(2);
-                count = db.delete(LOG_TABLE_NAME, LOGNO +  " = " + log_no +
-                                (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown URI " + uri);
-        }
+        count = db.delete(LOG_TABLE_NAME, selection, selectionArgs);
 
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
@@ -171,19 +211,7 @@ public class ControllerProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values,
                       String selection, String[] selectionArgs) {
         int count = 0;
-        switch (uriMatcher.match(uri)) {
-            case TASKTABLES:
-                count = db.update(TASK_TABLE_NAME, values, selection, selectionArgs);
-                break;
-
-            case TASKTABLE_ID:
-                count = db.update(TASK_TABLE_NAME, values,
-                        SL + " = " + uri.getPathSegments().get(1) +
-                                (!TextUtils.isEmpty(selection) ? " AND (" +selection + ')' : ""), selectionArgs);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown URI " + uri );
-        }
+        count = db.update(TASK_TABLE_NAME, values, selection, selectionArgs);
 
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
@@ -191,14 +219,6 @@ public class ControllerProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri) {
-        switch (uriMatcher.match(uri)){
-
-            case LOGTABLES:
-                return "com.android.cursor.dir/com.example.controls";
-            case LOGTABLE_ID:
-                return "com.android.cursor.item/com.example.controls";
-            default:
-                throw new IllegalArgumentException("Unsupported URI: " + uri);
-        }
+        return null;
     }
 }
