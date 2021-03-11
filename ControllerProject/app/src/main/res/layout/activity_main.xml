@@ -15,14 +15,13 @@
             android:layout_height="match_parent"
             >
             <EditText
-                android:id="@+id/edit_log_no"
+                android:id="@+id/edit_sl_no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter Log No....."
+                android:hint="Enter SL No....."
                 android:textSize="18dp"
                 android:padding="10dp"
                 android:layout_marginTop="10dp"
-                android:visibility="gone"
                 />
 
             <EditText
@@ -33,7 +32,7 @@
                 android:textSize="18dp"
                 android:padding="10dp"
                 android:layout_marginTop="20dp"
-                android:layout_below="@+id/edit_log_no"
+                android:layout_below="@+id/edit_sl_no"
                 />
 
             <EditText
@@ -64,13 +63,12 @@
                 android:id="@+id/btn_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Update Based on Project No"
+                android:text="Update based on SL no"
                 android:textAllCaps="false"
                 android:textSize="18dp"
                 android:layout_below="@+id/btn_insert"
                 android:layout_marginTop="20dp"
                 android:onClick="OnUpdateClick"
-                android:visibility="gone"
 
                 />
 
@@ -78,7 +76,7 @@
                 android:id="@+id/btn_delete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Delete Based on Project No"
+                android:text="Delete based on SL no"
                 android:textAllCaps="false"
                 android:textSize="18dp"
                 android:layout_below="@+id/btn_update"
@@ -88,15 +86,28 @@
                 />
 
             <Button
-                android:id="@+id/btn_show"
+                android:id="@+id/btn_task_table_show"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Show Data Based on Project No."
+                android:text="Show All Task Table Data"
                 android:textAllCaps="false"
                 android:textSize="18dp"
                 android:layout_below="@+id/btn_delete"
                 android:layout_marginTop="20dp"
-                android:onClick="OnShowClick"
+                android:onClick="OnTaskShowClick"
+
+                />
+
+            <Button
+                android:id="@+id/btn_log_table_show"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Show All Log Table Data"
+                android:textAllCaps="false"
+                android:textSize="18dp"
+                android:layout_below="@+id/btn_task_table_show"
+                android:layout_marginTop="20dp"
+                android:onClick="OnLogShowClick"
 
                 />
 
@@ -105,58 +116,58 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:textSize="18dp"
+                android:textSize="12dp"
                 android:textColor="@color/black"
 
                 android:textStyle="bold"
-                android:layout_below="@id/btn_show"
+                android:layout_below="@id/btn_log_table_show"
 
                 android:layout_marginLeft="30dp"
                 />
 
 
-            <RelativeLayout
-                android:id="@+id/relative_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/text_show"
-                >
-                <Button
-                    android:id="@+id/btn_assigned"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Assigned"
-                    android:textSize="18dp"
-                    android:layout_alignParentLeft="true"
-                    android:onClick="OnAssignedClick"
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/relative_layout"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignParentRight="true"-->
+<!--                android:layout_below="@+id/text_show"-->
+<!--                >-->
+<!--                <Button-->
+<!--                    android:id="@+id/btn_assigned"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Assigned"-->
+<!--                    android:textSize="18dp"-->
+<!--                    android:layout_alignParentLeft="true"-->
+<!--                    android:onClick="OnAssignedClick"-->
 
-                    />
+<!--                    />-->
 
-                <Button
-                    android:id="@+id/btn_completed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Completed"
-                    android:textSize="18dp"
-                    android:layout_alignParentRight="true"
-                    android:onClick="OnCompletedClick"
+<!--                <Button-->
+<!--                    android:id="@+id/btn_completed"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Completed"-->
+<!--                    android:textSize="18dp"-->
+<!--                    android:layout_alignParentRight="true"-->
+<!--                    android:onClick="OnCompletedClick"-->
 
-                    />
-            </RelativeLayout>
+<!--                    />-->
+<!--            </RelativeLayout>-->
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="New Task"
-                android:textAllCaps="false"
-                android:textSize="18dp"
-                android:layout_below="@+id/relative_layout"
-                android:layout_marginTop="20dp"
-                android:onClick="OnNewTaskClick"
+<!--            <Button-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="New Task"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textSize="18dp"-->
+<!--                android:layout_below="@+id/relative_layout"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:onClick="OnNewTaskClick"-->
 
 
-                />
+<!--                />-->
 
 
 

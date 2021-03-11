@@ -31,7 +31,9 @@ public class ControllerProvider extends ContentProvider {
     static final String TIMESTAMP = "timestamp";
 
 
-    private static HashMap<String, String> STUDENTS_PROJECTION_MAP;
+    private static HashMap<String, String> CONTROLLER_TASK_MAP;
+    private static HashMap<String, String> CONTROLLER_LOG_MAP;
+    private static HashMap<String, String>  CLIENT_TASK_MAP;
 
     //  task table
     static final String SL = "sl";
@@ -176,15 +178,25 @@ public class ControllerProvider extends ContentProvider {
                         String selection,String[] selectionArgs, String sortOrder) {
 
         Cursor c;
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+
         switch (selection){
             case "new_task":
                 String selectQuery = "SELECT * FROM "+ TASK_TABLE_NAME +"  WHERE `assignedto` = \"\" ORDER BY sl ASC LIMIT 1" ;
                 c = db.rawQuery(selectQuery, null);
                 break;
             case "all_task":
-                SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
                 qb.setTables(TASK_TABLE_NAME);
-                qb.setProjectionMap(STUDENTS_PROJECTION_MAP);
+                qb.setProjectionMap(CONTROLLER_TASK_MAP);
+
+                c = qb.query(db, projection,	"",
+                        selectionArgs,null, null, sortOrder);
+
+                c.setNotificationUri(getContext().getContentResolver(), uri);
+                break;
+            case "all_log":
+                qb.setTables(LOG_TABLE_NAME);
+                qb.setProjectionMap(CONTROLLER_LOG_MAP);
 
                 c = qb.query(db, projection,	"",
                         selectionArgs,null, null, sortOrder);
@@ -194,10 +206,9 @@ public class ControllerProvider extends ContentProvider {
             default:
                 SQLiteQueryBuilder qb1 = new SQLiteQueryBuilder();
                 qb1.setTables(TASK_TABLE_NAME);
-                qb1.setProjectionMap(STUDENTS_4PRO
-                        JECTION_MAP);
+                qb1.setProjectionMap(CLIENT_TASK_MAP);
 
-                c = qb1.query(db, projection,	"",
+                c = qb1.query(db, projection,	"assignedto= \""+selection+"\"",
                         selectionArgs,null, null, sortOrder);
 
                 c.setNotificationUri(getContext().getContentResolver(), uri);
@@ -225,7 +236,7 @@ public class ControllerProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         int count = 0;
-        count = db.delete(LOG_TABLE_NAME, selection, selectionArgs);
+        count = db.delete(TASK_TABLE_NAME, selection, selectionArgs);
 
         getContext().getContentResolver().notifyChange(uri, null);
         return count;

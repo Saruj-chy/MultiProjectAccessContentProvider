@@ -14,7 +14,7 @@
             android:layout_height="match_parent"
             >
             <EditText
-                android:id="@+id/edit_log_no"
+                android:id="@+id/edit_sl_no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Enter Sl no..."
@@ -24,7 +24,7 @@
                 />
 
             <EditText
-                android:id="@+id/edit_src"
+                android:id="@+id/edit_assignedto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="c2"
@@ -32,33 +32,32 @@
                 android:textSize="18dp"
                 android:padding="10dp"
                 android:layout_marginTop="20dp"
-                android:layout_below="@+id/edit_log_no"
+                android:layout_below="@+id/edit_sl_no"
                 android:clickable="false"
                 android:editable="false"
                 />
 
             <EditText
-                android:id="@+id/edit_data"
+                android:id="@+id/edit_msg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Enter your msg....."
                 android:textSize="18dp"
                 android:padding="10dp"
                 android:layout_marginTop="20dp"
-                android:layout_below="@+id/edit_src"
+                android:layout_below="@+id/edit_assignedto"
                 />
 
             <Button
-                android:id="@+id/btn_insert"
+                android:id="@+id/btn_new_task"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Insert"
-                android:textAllCaps="false"
+                android:text="New Task"
                 android:textSize="18dp"
-                android:layout_below="@+id/edit_data"
+                android:onClick="OnNewTaskClick"
+                android:layout_below="@+id/edit_msg"
                 android:layout_marginTop="20dp"
-                android:onClick="OnInsertClick"
-                android:visibility="gone"
+
 
                 />
 
@@ -66,37 +65,35 @@
                 android:id="@+id/btn_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Update Based on Project No"
+                android:text="Update Msg based on SL"
                 android:textAllCaps="false"
                 android:textSize="18dp"
-                android:layout_below="@+id/btn_insert"
+                android:layout_below="@+id/btn_new_task"
                 android:layout_marginTop="20dp"
                 android:onClick="OnUpdateClick"
 
                 />
 
             <Button
-                android:id="@+id/btn_delete"
+                android:id="@+id/btn_completed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Delete Based on Project No"
-                android:textAllCaps="false"
+                android:text="Completed"
                 android:textSize="18dp"
+                android:layout_alignParentRight="true"
+                android:onClick="OnCompletedClick"
                 android:layout_below="@+id/btn_update"
                 android:layout_marginTop="20dp"
-                android:onClick="OnDeleteClick"
-                android:visibility="gone"
-
                 />
 
             <Button
                 android:id="@+id/btn_show"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Show Data Based on Project No."
+                android:text="Show Assigned Data"
                 android:textAllCaps="false"
                 android:textSize="18dp"
-                android:layout_below="@+id/btn_delete"
+                android:layout_below="@+id/btn_completed"
                 android:layout_marginTop="20dp"
                 android:onClick="OnShowClick"
 
@@ -115,50 +112,6 @@
 
                 android:layout_marginLeft="30dp"
                 />
-
-
-
-
-            <RelativeLayout
-                android:id="@+id/relative_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/text_show"
-                >
-                <Button
-                    android:id="@+id/btn_assigned"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Assigned"
-                    android:textSize="18dp"
-                    android:layout_alignParentLeft="true"
-                    android:onClick="OnAssignedClick"
-
-                    />
-
-                <Button
-                    android:id="@+id/btn_completed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Completed"
-                    android:textSize="18dp"
-                    android:layout_alignParentRight="true"
-                    android:onClick="OnCompletedClick"
-
-                    />
-            </RelativeLayout>
-
-            <Button
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Task"
-                android:textSize="18dp"
-                android:layout_below="@+id/relative_layout"
-                android:onClick="OnNewTaskClick"
-                />
-
 
         </RelativeLayout>
     </ScrollView>

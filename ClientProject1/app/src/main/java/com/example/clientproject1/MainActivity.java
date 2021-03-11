@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mInsertBtn, mUpdateBtn, mDeleteBtn, mShowBtn, mAssignBtn, mCompleteBtn ;
     private TextView mShowTextView ;
 
-    private String mLogNo, mAssignedTo, mMsg;
+    private String mSLNo, mAssignedTo, mMsg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,37 +50,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initialize();
-        getAllEditText();
 
-        onDataShow( mAssignedTo) ;
 
     }
 
-
-
-
     public void OnUpdateClick(View v){
-        long currentTime = Calendar.getInstance().getTimeInMillis();
 
         getAllEditText();
 
+        long currentTime = Calendar.getInstance().getTimeInMillis();
         ContentValues values = new ContentValues();
         values.put(MSG, mMsg);
-//        values.put(ASSIGNDATETIME, currentTime);
-//        values.put(COMPLETEDATETIME, 0);
-//        values.put(ISCOMPLETE, 0);
 
-//        Uri students = Uri.parse(URL);
-        int c= getContentResolver().update(TASK_TABLE_URI, values, "assignedto=\""+ mAssignedTo +"\"", null) ;
+        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl= "+ mSLNo +" and assignedto=\""+ mAssignedTo +"\"", null) ;
 
-//        Toast.makeText(this, " update ", Toast.LENGTH_SHORT).show();
-        mShowTextView.setText("updated msg by c1");
+        if(c>0){
+            Toast.makeText(this, " update msg successfull", Toast.LENGTH_SHORT).show();
+            LogTableUri(mAssignedTo, mMsg, "sl no "+ mSLNo +" msg updated by "+mAssignedTo, currentTime ) ;
+            ClearAllText();
+        }
 
-        LogTableUri(mAssignedTo, mMsg, mAssignedTo +" msg updated by c1", currentTime ) ;
-
-        ClearAllText();
-
-//        Toast.makeText(this, "Processing", Toast.LENGTH_SHORT).show();
 
     }
     private void LogTableUri(String mSrc, String mData, String msg, long currentTime) {
@@ -93,142 +82,126 @@ public class MainActivity extends AppCompatActivity {
         Uri log_uri = getContentResolver().insert( LOG_TABLE_URI, log_Values);
         Log.e("TAG", "log_uri: "+log_uri) ;
     }
-    public void OnAssignedClick(View v){
-        long currentTime = Calendar.getInstance().getTimeInMillis();
-
-        getAllEditText();
-
-        ContentValues values = new ContentValues();
-//        values.put(ControllerProvider.MSG, mMsg);
-        values.put(ASSIGNDATETIME, currentTime);
-        values.put(COMPLETEDATETIME, 0);
-        values.put(ISCOMPLETE, 0);
-
-//        Uri students = Uri.parse(URL);
-        int c= getContentResolver().update(TASK_TABLE_URI, values, "assignedto=\""+ mAssignedTo +"\"", null) ;
-
-        Toast.makeText(this, " assign "+c+"  "+ mAssignedTo, Toast.LENGTH_SHORT).show();
-        mShowTextView.setText("assigndatetime updated by c1");
-
-        LogTableUri(mAssignedTo, mMsg, "assigndatetime updated by c1", currentTime ) ;
-
-        ClearAllText();
-
-//        Toast.makeText(this, "Processing", Toast.LENGTH_SHORT).show();
-
-    }
     public void OnCompletedClick(View v){
-        long currentTime = Calendar.getInstance().getTimeInMillis();
-
         getAllEditText();
 
+        long currentTime = Calendar.getInstance().getTimeInMillis();
         ContentValues values = new ContentValues();
-//        values.put(ControllerProvider.MSG, mMsg);
         values.put(COMPLETEDATETIME, currentTime);
         values.put(ISCOMPLETE, 1);
 
-//        Uri students = Uri.parse(URL);
-        int c= getContentResolver().update(TASK_TABLE_URI, values, "assignedto=\""+ mAssignedTo +"\"", null) ;
+        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl= "+ mSLNo +" and assignedto=\""+ mAssignedTo +"\"", null) ;
+        if(c>0){
+            Toast.makeText(this, " task completed sl no: "+ mSLNo, Toast.LENGTH_SHORT).show();
+            LogTableUri(mAssignedTo, mMsg, "sl no "+ mSLNo +" completed by "+mAssignedTo, currentTime ) ;
 
-        Toast.makeText(this, " complete "+c+"  "+ mAssignedTo, Toast.LENGTH_SHORT).show();
+            ClearAllText();
+        }else{
+            Toast.makeText(this, "not", Toast.LENGTH_SHORT).show();
+        }
 
-        mShowTextView.setText("completeddatetime updated by c1");
+//        mShowTextView.setText("completeddatetime updated by c1");
 
-        LogTableUri(mAssignedTo, mMsg, " completeddatetime updated by c1", currentTime ) ;
-
-        ClearAllText();
-
-//        Toast.makeText(this, "Processing", Toast.LENGTH_SHORT).show();
 
     }
-
     public void OnNewTaskClick(View v){
         Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));
-        Cursor cursor = managedQuery(students, null, "new_task", null, "");
+        Cursor cursor = managedQuery(students, null, "new_task", null, null);
 
         String sl = null;
         if (cursor.moveToFirst()) {
             sl = cursor.getString(cursor.getColumnIndex(SL));
         }
 
-        long currentTime = Calendar.getInstance().getTimeInMillis();
-
         getAllEditText();
 
+        long currentTime = Calendar.getInstance().getTimeInMillis();
         ContentValues values = new ContentValues() ;
-        values.put(ASSIGNEDTO, "c1");
+        values.put(ASSIGNEDTO, mAssignedTo);
         values.put(ASSIGNDATETIME, currentTime);
-//        values.put(ControllerProvider.COMPLETEDATETIME, 0);
-//        values.put(ControllerProvider.ISCOMPLETE, 0);
 
-//        Uri students = Uri.parse(URL);
         int c= getContentResolver().update(TASK_TABLE_URI, values, "sl=\""+ sl +"\"", null) ;
+        if(c>0){
+            LogTableUri(mAssignedTo, mMsg, mAssignedTo+" assigned new task sl no: "+ sl, currentTime ) ;
+            Toast.makeText(this, " New Task Assigned successfull.", Toast.LENGTH_SHORT).show();
 
-//        Toast.makeText(this, " update ", Toast.LENGTH_SHORT).show();
-        mShowTextView.setText("updated assignedto no "+ mAssignedTo);
+        }
 
-        LogTableUri(mAssignedTo, mMsg, mAssignedTo +" updated by Controller", currentTime ) ;
 
 //        ClearAllText();
-
-//        Toast.makeText(this, "Processing", Toast.LENGTH_SHORT).show();
-
     }
-
-
-
     public void OnShowClick(View v){
-            getAllEditText();
-
-        onDataShow( "c1") ;
-
-        ClearAllText();
-    }
-
-    private void onDataShow(String mAssignedTo) {
-
+        getAllEditText();
         Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));
         Cursor c = managedQuery(students, null, mAssignedTo, null, "");
 
+        Log.e("count", c.getCount() +"") ;
+//        Log.e("task", c.getString(c.getColumnIndex(ControllerProvider.MSG)) ) ;
+
+        StringBuilder stringBuilder = new StringBuilder();
         if (c.moveToFirst()) {
+//            Log.e("task", c.getString(c.getColumnIndex(ControllerProvider.MSG)) ) ;
             do{
-                mShowTextView.setText(" MSG: "+c.getString(c.getColumnIndex(MSG)) +
+                stringBuilder.append(" SL: "+c.getString(c.getColumnIndex(SL)) +
+                        " \n MSG: "+c.getString(c.getColumnIndex(MSG)) +
                         " \n assignedto: " +  c.getString(c.getColumnIndex( ASSIGNEDTO)) +
                         " \n entrydatetime: " + c.getString(c.getColumnIndex( ENTRYDATETIME ))+
                         " \n assigndatetime: " + c.getString(c.getColumnIndex( ASSIGNDATETIME ))+
                         " \n Complete datetime: " + c.getString(c.getColumnIndex( COMPLETEDATETIME ))+
-                        " \n isComplete: " + c.getString(c.getColumnIndex( ISCOMPLETE )));
-
+                        " \n isComplete: " + c.getString(c.getColumnIndex( ISCOMPLETE ))+
+                        " \n \n"    );
             } while (c.moveToNext());
-        }else{
-            mShowTextView.setText("No task assigned");
         }
+        mShowTextView.setText(stringBuilder) ;
 
+        ClearAllText();
     }
 
     private void initialize() {
-        mLogNoEditText = findViewById(R.id.edit_log_no) ;
-        mSrcEditText = findViewById(R.id.edit_src) ;
-        mDataEditText = findViewById(R.id.edit_data) ;
-        mInsertBtn = findViewById(R.id.btn_insert) ;
+        mLogNoEditText = findViewById(R.id.edit_sl_no) ;
+        mSrcEditText = findViewById(R.id.edit_assignedto) ;
+        mDataEditText = findViewById(R.id.edit_msg) ;
+        mInsertBtn = findViewById(R.id.btn_new_task) ;
         mUpdateBtn = findViewById(R.id.btn_update) ;
-        mDeleteBtn = findViewById(R.id.btn_delete) ;
+        mDeleteBtn = findViewById(R.id.btn_completed) ;
         mShowBtn = findViewById(R.id.btn_show) ;
-        mAssignBtn = findViewById(R.id.btn_assigned) ;
         mCompleteBtn = findViewById(R.id.btn_completed) ;
         mShowTextView = findViewById(R.id.text_show) ;
     }
-
     private void getAllEditText(){
-        mLogNo = mLogNoEditText.getText().toString() ;
+        mSLNo = mLogNoEditText.getText().toString() ;
         mAssignedTo = mSrcEditText.getText().toString() ;
         mMsg = mDataEditText.getText().toString() ;
 
     }
-
     private void ClearAllText(){
-//        mLogNoEditText.setText("");
+        mLogNoEditText.setText("");
 //        mSrcEditText.setText("");
         mDataEditText.setText("");
     }
+//    public void OnAssignedClick(View v){
+//        long currentTime = Calendar.getInstance().getTimeInMillis();
+//
+//        getAllEditText();
+//
+//        ContentValues values = new ContentValues();
+////        values.put(ControllerProvider.MSG, mMsg);
+//        values.put(ASSIGNDATETIME, currentTime);
+//        values.put(COMPLETEDATETIME, 0);
+//        values.put(ISCOMPLETE, 0);
+//
+////        Uri students = Uri.parse(URL);
+//        int c= getContentResolver().update(TASK_TABLE_URI, values, "assignedto=\""+ mAssignedTo +"\"", null) ;
+//
+//        Toast.makeText(this, " assign "+c+"  "+ mAssignedTo, Toast.LENGTH_SHORT).show();
+//        mShowTextView.setText("assigndatetime updated by c1");
+//
+//        LogTableUri(mAssignedTo, mMsg, "assigndatetime updated by c1", currentTime ) ;
+//
+//        ClearAllText();
+//
+////        Toast.makeText(this, "Processing", Toast.LENGTH_SHORT).show();
+//
+//    }
+
 }
