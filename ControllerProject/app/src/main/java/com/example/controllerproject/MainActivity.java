@@ -1,11 +1,17 @@
 package com.example.controllerproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,26 +19,47 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.controllerproject.notify.NotificationActivity;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Field;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
+    String URL = "http://192.168.1.149/android/AgamiLab/smart_shop/sendPushNotification.php" ;
 
     private EditText mLogNoEditText, mSrcEditText, mDataEditText;
     private Button mInsertBtn, mUpdateBtn, mDeleteBtn, mShowBtn, mAssignBtn, mCompleteBtn ;
     private TextView mShowTextView ;
 
     private String mSLNo, mAssignedTo, mMsg;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         initialize();
+
+        FirebaseMessaging.getInstance().subscribeToTopic("com.example.controllerproject") ;
     }
 
-    public void OnInsertClick(View v){
 
+
+    public void OnInsertClick(View v){
         getAllEditText();
 
         long currentTime = Calendar.getInstance().getTimeInMillis();
@@ -48,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         Log.e("TAG", "task_uri: "+task_uri) ;
 
         LogTableUri(mAssignedTo, mMsg, " inserted by Controller", currentTime ) ;
+
 
 //        ClearAllText();
 
@@ -87,21 +115,69 @@ public class MainActivity extends AppCompatActivity {
         }
 //        ClearAllText();
     }
+    private void sendDataMessageFromServer(String title, String message, String data, String topic) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.e("response", response) ;
+
+//                if(response.equalsIgnoreCase("true")){
+//                    titleEditText.setText("");
+//                    editText.setText("");
+//
+//                    Toast.makeText(getApplicationContext(), "Post upload Successfully...", Toast.LENGTH_SHORT).show();
+//                } else{
+//                    Toast.makeText(getApplicationContext(), "Please check Connection...", Toast.LENGTH_SHORT).show();
+//                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Please check Connection...", Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> parameters = new HashMap<String, String>();
+                parameters.put("title", title);
+                parameters.put("message", message);
+                parameters.put("data", data);
+                parameters.put("topic", topic);
+
+                Log.e("TAG", title+" "+message) ;
+
+                return parameters;
+            }
+
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+        Log.d("TAG", "stringRequest: "+stringRequest ) ;
+
+
+    }
 
     public void OnDeleteClick(View v){
-        getAllEditText();
-        if(mSLNo.equalsIgnoreCase("")){
-            mSLNo=0+"";
-        }
 
-//        Toast.makeText(this, "sl no: "+mSLNo, Toast.LENGTH_SHORT).show();
+        sendDataMessageFromServer("title", "message", "data", "com.example.client1");
 
-        long currentTime = Calendar.getInstance().getTimeInMillis();
-        int c= getContentResolver().delete(ControllerProvider.TASK_TABLE_URI, "sl= "+ mSLNo , null) ;
-        if (c > 0) {
-            Toast.makeText(this, "sl no. "+mSLNo+" deleted successfully", Toast.LENGTH_SHORT).show();
-            LogTableUri(mAssignedTo, mMsg, "sl no. "+mSLNo +" deleted by Controller", currentTime ) ;
-        }
+//        startActivity(new Intent(getApplicationContext(), NotificationActivity.class));
+
+//        getAllEditText();
+//        if(mSLNo.equalsIgnoreCase("")){
+//            mSLNo=0+"";
+//        }
+//
+////        Toast.makeText(this, "sl no: "+mSLNo, Toast.LENGTH_SHORT).show();
+//
+//        long currentTime = Calendar.getInstance().getTimeInMillis();
+//        int c= getContentResolver().delete(ControllerProvider.TASK_TABLE_URI, "sl= "+ mSLNo , null) ;
+//        if (c > 0) {
+//            Toast.makeText(this, "sl no. "+mSLNo+" deleted successfully", Toast.LENGTH_SHORT).show();
+//            LogTableUri(mAssignedTo, mMsg, "sl no. "+mSLNo +" deleted by Controller", currentTime ) ;
+//        }
 //        ClearAllText();
     }
 

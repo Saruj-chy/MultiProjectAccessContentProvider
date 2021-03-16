@@ -13,6 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
 
         initialize();
 
+//        FirebaseApp.initializeApp(this);
+
+
+        FirebaseMessaging.getInstance().subscribeToTopic("ALLCLIENT") ;
 
     }
 

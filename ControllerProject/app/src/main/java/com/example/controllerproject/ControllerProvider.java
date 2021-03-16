@@ -17,18 +17,18 @@ import android.util.Log;
 import java.util.HashMap;
 
 public class ControllerProvider extends ContentProvider {
-    static final String PROVIDER_NAME = "com.example.controllerproject.ControllerProvider";
-    static final String LOG_URL = "content://" + PROVIDER_NAME + "/logtable";
-    static final Uri LOG_TABLE_URI = Uri.parse(LOG_URL);
-    static final String TASK_URL = "content://" + PROVIDER_NAME + "/tasktable";
-    static final Uri TASK_TABLE_URI = Uri.parse(TASK_URL);
+   public static final String PROVIDER_NAME = "com.example.controllerproject.ControllerProvider";
+    public static final String LOG_URL = "content://" + PROVIDER_NAME + "/logtable";
+    public static final Uri LOG_TABLE_URI = Uri.parse(LOG_URL);
+    public static final String TASK_URL = "content://" + PROVIDER_NAME + "/tasktable";
+    public static final Uri TASK_TABLE_URI = Uri.parse(TASK_URL);
 
 //    static final String ID = "id";
-    static final String LOGNO = "logno";
-    static final String SRC = "src";
-    static final String ACTIONS = "actions";
-    static final String DATA = "data";
-    static final String TIMESTAMP = "timestamp";
+    public static final String LOGNO = "logno";
+    public static final String SRC = "src";
+    public static final String ACTIONS = "actions";
+    public static final String DATA = "data";
+    public static final String TIMESTAMP = "timestamp";
 
 
     private static HashMap<String, String> CONTROLLER_TASK_MAP;
@@ -36,13 +36,13 @@ public class ControllerProvider extends ContentProvider {
     private static HashMap<String, String>  CLIENT_TASK_MAP;
 
     //  task table
-    static final String SL = "sl";
-    static final String MSG = "msg";
-    static final String ASSIGNEDTO = "assignedto";
-    static final String ENTRYDATETIME = "entrydatetime";
-    static final String ASSIGNDATETIME = "assigndatetime";
-    static final String COMPLETEDATETIME = "completedatetime";
-    static final String ISCOMPLETE = "icComplete";
+    public static final String SL = "sl";
+    public static final String MSG = "msg";
+    public static final String ASSIGNEDTO = "assignedto";
+    public static final String ENTRYDATETIME = "entrydatetime";
+    public static final String ASSIGNDATETIME = "assigndatetime";
+    public static final String COMPLETEDATETIME = "completedatetime";
+    public static final String ISCOMPLETE = "icComplete";
 
     private SQLiteDatabase db;
     static final String DATABASE_NAME = "TASKLOGTABLE";
