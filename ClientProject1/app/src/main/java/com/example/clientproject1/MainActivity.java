@@ -3,9 +3,11 @@ package com.example.clientproject1;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +15,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.clientproject1.controller.AppController;
+import com.example.clientproject1.services.OperationService;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Calendar;
@@ -132,31 +136,33 @@ public class MainActivity extends AppCompatActivity {
 
 //        ClearAllText();
     }
+
     public void OnShowClick(View v){
-        getAllEditText();
-        Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));
-        Cursor c = managedQuery(students, null, mAssignedTo, null, "");
 
-        Log.e("count", c.getCount() +"") ;
-//        Log.e("task", c.getString(c.getColumnIndex(ControllerProvider.MSG)) ) ;
-
-        StringBuilder stringBuilder = new StringBuilder();
-        if (c.moveToFirst()) {
-//            Log.e("task", c.getString(c.getColumnIndex(ControllerProvider.MSG)) ) ;
-            do{
-                stringBuilder.append(" SL: "+c.getString(c.getColumnIndex(SL)) +
-                        " \n MSG: "+c.getString(c.getColumnIndex(MSG)) +
-                        " \n assignedto: " +  c.getString(c.getColumnIndex( ASSIGNEDTO)) +
-                        " \n entrydatetime: " + c.getString(c.getColumnIndex( ENTRYDATETIME ))+
-                        " \n assigndatetime: " + c.getString(c.getColumnIndex( ASSIGNDATETIME ))+
-                        " \n Complete datetime: " + c.getString(c.getColumnIndex( COMPLETEDATETIME ))+
-                        " \n isComplete: " + c.getString(c.getColumnIndex( ISCOMPLETE ))+
-                        " \n \n"    );
-            } while (c.moveToNext());
-        }
-        mShowTextView.setText(stringBuilder) ;
-
-        ClearAllText();
+//        getAllEditText();
+//        Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));
+//        Cursor c = managedQuery(students, null, mAssignedTo, null, "");
+//
+//        Log.e("count", c.getCount() +"") ;
+////        Log.e("task", c.getString(c.getColumnIndex(ControllerProvider.MSG)) ) ;
+//
+//        StringBuilder stringBuilder = new StringBuilder();
+//        if (c.moveToFirst()) {
+////            Log.e("task", c.getString(c.getColumnIndex(ControllerProvider.MSG)) ) ;
+//            do{
+//                stringBuilder.append(" SL: "+c.getString(c.getColumnIndex(SL)) +
+//                        " \n MSG: "+c.getString(c.getColumnIndex(MSG)) +
+//                        " \n assignedto: " +  c.getString(c.getColumnIndex( ASSIGNEDTO)) +
+//                        " \n entrydatetime: " + c.getString(c.getColumnIndex( ENTRYDATETIME ))+
+//                        " \n assigndatetime: " + c.getString(c.getColumnIndex( ASSIGNDATETIME ))+
+//                        " \n Complete datetime: " + c.getString(c.getColumnIndex( COMPLETEDATETIME ))+
+//                        " \n isComplete: " + c.getString(c.getColumnIndex( ISCOMPLETE ))+
+//                        " \n \n"    );
+//            } while (c.moveToNext());
+//        }
+//        mShowTextView.setText(stringBuilder) ;
+//
+//        ClearAllText();
     }
 
     private void initialize() {

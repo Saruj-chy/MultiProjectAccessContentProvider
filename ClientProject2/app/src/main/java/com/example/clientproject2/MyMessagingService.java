@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -40,7 +41,13 @@ public class MyMessagingService extends FirebaseMessagingService {
 
         if (remoteMessage.getData().size() > 0) {
             createNotification();
-            OnNewTaskClick();
+//            OnNewTaskClick();
+
+            Intent intent = new Intent();
+            intent.setClass(this, OperationService.class) ;
+            startService(intent) ;
+
+
         }
 
 //        if (remoteMessage.getData().size() > 0) {

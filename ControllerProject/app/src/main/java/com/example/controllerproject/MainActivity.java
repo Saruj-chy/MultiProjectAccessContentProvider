@@ -26,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.controllerproject.controller.AppController;
 import com.example.controllerproject.notify.NotificationActivity;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -39,8 +40,13 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import static com.example.controllerproject.ControllerProvider.ASSIGNDATETIME;
+import static com.example.controllerproject.ControllerProvider.ASSIGNEDTO;
+import static com.example.controllerproject.ControllerProvider.SL;
+import static com.example.controllerproject.ControllerProvider.TASK_TABLE_URI;
+
 public class MainActivity extends AppCompatActivity {
-    String URL = "http://192.168.1.149/android/AgamiLab/smart_shop/sendPushNotification.php" ;
+    String URL = "http://192.168.1.6/android/AgamiLab/smart_shop/sendPushNotification.php" ;
 
     private EditText mLogNoEditText, mSrcEditText, mDataEditText;
     private Button mInsertBtn, mUpdateBtn, mDeleteBtn, mShowBtn, mAssignBtn, mCompleteBtn ;
@@ -65,13 +71,13 @@ public class MainActivity extends AppCompatActivity {
         long currentTime = Calendar.getInstance().getTimeInMillis();
         ContentValues task_Values = new ContentValues();
         task_Values.put(ControllerProvider.MSG, mMsg);
-        task_Values.put(ControllerProvider.ASSIGNEDTO, mAssignedTo);
+        task_Values.put(ASSIGNEDTO, mAssignedTo);
         task_Values.put(ControllerProvider.ENTRYDATETIME, currentTime);
-        task_Values.put(ControllerProvider.ASSIGNDATETIME, 0 );
+        task_Values.put(ASSIGNDATETIME, 0 );
         task_Values.put(ControllerProvider.COMPLETEDATETIME, 0 );
         task_Values.put(ControllerProvider.ISCOMPLETE, 0 );
 
-        Uri task_uri = getContentResolver().insert( ControllerProvider.TASK_TABLE_URI, task_Values);
+        Uri task_uri = getContentResolver().insert( TASK_TABLE_URI, task_Values);
         Log.e("TAG", "task_uri: "+task_uri) ;
 
         LogTableUri(mAssignedTo, mMsg, " inserted by Controller", currentTime ) ;
@@ -98,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         long currentTime = Calendar.getInstance().getTimeInMillis();
         ContentValues values = new ContentValues();
         values.put(ControllerProvider.MSG, mMsg);
-        values.put(ControllerProvider.ASSIGNEDTO, mAssignedTo);
+        values.put(ASSIGNEDTO, mAssignedTo);
 
 
 //        Uri students = Uri.parse(URL);
@@ -106,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             mSLNo=0+"";
         }
 //        Toast.makeText(this, "sl no: "+mSLNo , Toast.LENGTH_SHORT).show();
-        int c= getContentResolver().update(ControllerProvider.TASK_TABLE_URI, values, "sl= "+ mSLNo , null) ;
+        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl= "+ mSLNo , null) ;
 
         if (c > 0) {
             Toast.makeText(this, " updated successfull.", Toast.LENGTH_SHORT).show();
@@ -115,53 +121,26 @@ public class MainActivity extends AppCompatActivity {
         }
 //        ClearAllText();
     }
-    private void sendDataMessageFromServer(String title, String message, String data, String topic) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new com.android.volley.Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.e("response", response) ;
 
-//                if(response.equalsIgnoreCase("true")){
-//                    titleEditText.setText("");
-//                    editText.setText("");
-//
-//                    Toast.makeText(getApplicationContext(), "Post upload Successfully...", Toast.LENGTH_SHORT).show();
-//                } else{
-//                    Toast.makeText(getApplicationContext(), "Please check Connection...", Toast.LENGTH_SHORT).show();
-//                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Please check Connection...", Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String, String> parameters = new HashMap<String, String>();
-                parameters.put("title", title);
-                parameters.put("message", message);
-                parameters.put("data", data);
-                parameters.put("topic", topic);
-
-                Log.e("TAG", title+" "+message) ;
-
-                return parameters;
-            }
-
-        };
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-        Log.d("TAG", "stringRequest: "+stringRequest ) ;
-
-
-    }
 
     public void OnDeleteClick(View v){
+        Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));
+        Cursor cursor = getContentResolver().query(students, null, "new_task", null, null);
 
-        sendDataMessageFromServer("title", "message", "data", "com.example.client1");
+        String sl = null ;
+        if (cursor.moveToFirst()) {
+            sl = cursor.getString(cursor.getColumnIndex(SL));
+        }
+        AppController.getAppController().getInAppNotifier().log("sl", "sl: "+sl );
+
+        long currentTime = Calendar.getInstance().getTimeInMillis();
+        ContentValues values = new ContentValues() ;
+        values.put(SL, sl);
+        values.put(ASSIGNEDTO, "c1");
+        values.put(ASSIGNDATETIME, currentTime);
+        int c1= getContentResolver().update(TASK_TABLE_URI, values, "sl=\""+ sl +"\"", null) ;
+        int c2= getContentResolver().update(TASK_TABLE_URI, values, "sl=\""+ sl +"\"", null) ;
+
 
 //        startActivity(new Intent(getApplicationContext(), NotificationActivity.class));
 
@@ -183,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnTaskShowClick(View v){
 
-        Uri students = Uri.parse(String.valueOf(ControllerProvider.TASK_TABLE_URI));
+        Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));
         Cursor c = managedQuery(students, null, "all_task", null, "");
 
         Log.e("count", c.getCount() +"") ;
@@ -195,9 +174,9 @@ public class MainActivity extends AppCompatActivity {
             do{
                 stringBuilder.append(" SL: "+c.getString(c.getColumnIndex(ControllerProvider.SL)) +
                         " \n MSG: " +  c.getString(c.getColumnIndex( ControllerProvider.MSG)) +
-                        " \n assignedto: " +  c.getString(c.getColumnIndex( ControllerProvider.ASSIGNEDTO)) +
+                        " \n assignedto: " +  c.getString(c.getColumnIndex( ASSIGNEDTO)) +
                         " \n entrydatetime: " + c.getString(c.getColumnIndex( ControllerProvider.ENTRYDATETIME ))+
-                        " \n assigndatetime: " + c.getString(c.getColumnIndex( ControllerProvider.ASSIGNDATETIME ))+
+                        " \n assigndatetime: " + c.getString(c.getColumnIndex( ASSIGNDATETIME ))+
                         " \n Complete datetime: " + c.getString(c.getColumnIndex( ControllerProvider.COMPLETEDATETIME ))+
                         " \n isComplete: " + c.getString(c.getColumnIndex( ControllerProvider.ISCOMPLETE ))+
                         " \n \n"    );
@@ -296,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void OnNewTaskClick(View v){
-        Uri students = Uri.parse(String.valueOf(ControllerProvider.TASK_TABLE_URI));
+        Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));
         Cursor cursor = managedQuery(students, null, "new_task", null, "");
 
         String sl = null;
@@ -310,12 +289,12 @@ public class MainActivity extends AppCompatActivity {
         getAllEditText();
 
         ContentValues values = new ContentValues() ;
-        values.put(ControllerProvider.ASSIGNEDTO, "c1");
-        values.put(ControllerProvider.ASSIGNDATETIME, currentTime);
+        values.put(ASSIGNEDTO, "c1");
+        values.put(ASSIGNDATETIME, currentTime);
         values.put(ControllerProvider.COMPLETEDATETIME, 0);
         values.put(ControllerProvider.ISCOMPLETE, 0);
 
-        int c= getContentResolver().update(ControllerProvider.TASK_TABLE_URI, values, "sl=\""+ sl +"\"", null) ;
+        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl=\""+ sl +"\"", null) ;
 
         Toast.makeText(this, " update ", Toast.LENGTH_SHORT).show();
         mShowTextView.setText("updated assignedto no "+ mAssignedTo);
@@ -336,12 +315,12 @@ public class MainActivity extends AppCompatActivity {
 
         ContentValues values = new ContentValues();
 //        values.put(ControllerProvider.MSG, mMsg);
-        values.put(ControllerProvider.ASSIGNDATETIME, currentTime);
+        values.put(ASSIGNDATETIME, currentTime);
         values.put(ControllerProvider.COMPLETEDATETIME, 0);
         values.put(ControllerProvider.ISCOMPLETE, 0);
 
 //        Uri students = Uri.parse(URL);
-        int c= getContentResolver().update(ControllerProvider.TASK_TABLE_URI, values, "assignedto=\""+ mAssignedTo +"\"", null) ;
+        int c= getContentResolver().update(TASK_TABLE_URI, values, "assignedto=\""+ mAssignedTo +"\"", null) ;
 
 //        Toast.makeText(this, " update ", Toast.LENGTH_SHORT).show();
         mShowTextView.setText("assigndatetime updated by Controller");

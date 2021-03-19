@@ -26,6 +26,8 @@
             </intent-filter>
         </service>
 
+        <service android:name=".OperationService"/>
+
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.clientproject1.services.OperationService;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -41,8 +43,13 @@ public class MyMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         if (remoteMessage.getData().size() > 0) {
             createNotification();
-            OnNewTaskClick();
+//            OnNewTaskClick();
 //            setAutoRefresh();
+//            OperationService operationService = new OperationService("client1");
+
+            Intent intent = new Intent();
+            intent.setClass(this, OperationService.class) ;
+            startService(intent) ;
         }
 
 

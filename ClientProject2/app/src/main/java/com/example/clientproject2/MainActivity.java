@@ -3,6 +3,7 @@ package com.example.clientproject2;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -63,20 +64,24 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnUpdateClick(View v){
 
-        getAllEditText();
+        Intent intent = new Intent();
+        intent.setClass(this, OperationService.class) ;
+        startService(intent) ;
 
-        long currentTime = Calendar.getInstance().getTimeInMillis();
-        ContentValues values = new ContentValues();
-        values.put(MSG, mMsg);
-
-        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl= "+ mSLNo +" and assignedto=\""+ mAssignedTo +"\"", null) ;
-
-        if(c>0){
-            Toast.makeText(this, " update msg successfull", Toast.LENGTH_SHORT).show();
-            LogTableUri(mAssignedTo, mMsg, "sl no "+ mSLNo +" msg updated by "+mAssignedTo, currentTime ) ;
-            ClearAllText();
-
-        }
+//        getAllEditText();
+//
+//        long currentTime = Calendar.getInstance().getTimeInMillis();
+//        ContentValues values = new ContentValues();
+//        values.put(MSG, mMsg);
+//
+//        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl= "+ mSLNo +" and assignedto=\""+ mAssignedTo +"\"", null) ;
+//
+//        if(c>0){
+//            Toast.makeText(this, " update msg successfull", Toast.LENGTH_SHORT).show();
+//            LogTableUri(mAssignedTo, mMsg, "sl no "+ mSLNo +" msg updated by "+mAssignedTo, currentTime ) ;
+//            ClearAllText();
+//
+//        }
 
 
     }

@@ -50,8 +50,7 @@ public class MyMessagingService extends FirebaseMessagingService {
     String TAG = "TAG";
     DatabaseHandler db = new DatabaseHandler(this);
 
-    String URL = "http://192.168.1.149/android/AgamiLab/smart_shop/sendPushNotification.php" ;
-
+    String URL = "http://192.168.1.6/android/AgamiLab/smart_shop/sendPushNotification.php" ;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {

@@ -14,7 +14,10 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.example.controllerproject.controller.AppController;
+
 import java.util.HashMap;
+import java.util.Random;
 
 public class ControllerProvider extends ContentProvider {
    public static final String PROVIDER_NAME = "com.example.controllerproject.ControllerProvider";
@@ -110,68 +113,9 @@ public class ControllerProvider extends ContentProvider {
             return task_uri;
         }
 
-        Log.e("inserturi", log_table_ID+" "+ uri) ;
-
         throw new SQLException("Failed to add a record into " + uri);
     }
 
-//    @Override
-//    public Cursor query(Uri uri, String[] projection,
-//                        String selection, String[] selectionArgs, String sortOrder) {
-//
-//        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-//        qb.setTables(TASK_TABLE_NAME);
-//
-//        qb.setProjectionMap(STUDENTS_PROJECTION_MAP);
-//
-////        switch (uriMatcher.match(uri)) {
-////            case STUDENTS:
-////                qb.setProjectionMap(STUDENTS_PROJECTION_MAP);
-////                break;
-////
-////            case STUDENT_ID:
-////                qb.appendWhere( _ID + "=" + uri.getPathSegments().get(1));
-////                break;
-////
-////            default:
-////        }
-//
-////        if (sortOrder == null || sortOrder == ""){
-////            /**
-////             * By default sort on student names
-////             */
-////            sortOrder = NAME;
-////        }
-//
-//        Cursor c = qb.query(db,	projection,	selection,
-//                selectionArgs,null, null, sortOrder);
-//        /**
-//         * register to watch a content URI for changes
-//         */
-//        c.setNotificationUri(getContext().getContentResolver(), uri);
-//        return c;
-//
-//
-//
-////
-////
-////        Log.e("query", selection+" :s: "+ sortOrder) ;
-////        String selectQuery ;
-////
-//////        selectQuery = "SELECT  * FROM  "+ TASK_TABLE_NAME +" WHERE assignedto = \""+selection+"\" "  ;
-////        selectQuery = "SELECT  * FROM  "+ TASK_TABLE_NAME   ;
-//////        if(selection.equalsIgnoreCase("")) {
-//////            selection = String.valueOf(1);
-//////        }
-//////        if(!sortOrder.equalsIgnoreCase("")){
-//////
-//////        }else{
-//////            selectQuery = "SELECT  * FROM  "+ LOG_TABLE_NAME +" WHERE logno = "+selection+" " ;
-//////        }
-////        Cursor c = db.rawQuery(selectQuery, null);
-////        c.setNotificationUri(getContext().getContentResolver(), uri);
-////        return c;
-//    }
 
     @Override
     public Cursor query(Uri uri, String[] projection,
@@ -182,7 +126,15 @@ public class ControllerProvider extends ContentProvider {
 
         switch (selection){
             case "new_task":
+                AppController.getAppController().getInAppNotifier().log("trig", "selection: "+ selection );
                 String selectQuery = "SELECT * FROM "+ TASK_TABLE_NAME +"  WHERE `assignedto` = \"\" ORDER BY sl ASC LIMIT 1" ;
+
+//                db.beginTransactionNonExclusive();
+//                try {
+//                    db.setTransactionSuccessful();
+//                } finally {
+//                    db.endTransaction();
+//                }
                 c = db.rawQuery(selectQuery, null);
                 break;
             case "all_task":
@@ -212,24 +164,9 @@ public class ControllerProvider extends ContentProvider {
                         selectionArgs,null, null, sortOrder);
 
                 c.setNotificationUri(getContext().getContentResolver(), uri);
-
-//                String singleSelectQuery = "SELECT * FROM "+ TASK_TABLE_NAME +"  WHERE assignedto =\""+ selection+"\"" ;
-//                c = db.rawQuery(singleSelectQuery, null);
                 break;
 
         }
-
-//        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-//        qb.setTables(TASK_TABLE_NAME);
-//        qb.setProjectionMap(STUDENTS_PROJECTION_MAP);
-//
-//        c = qb.query(db, projection,	selection,
-//                selectionArgs,null, null, sortOrder);
-//        /**
-//         * register to watch a content URI for changes
-//         */
-//        c.setNotificationUri(getContext().getContentResolver(), uri);
-
         return c;
     }
 
@@ -246,10 +183,34 @@ public class ControllerProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values,
                       String selection, String[] selectionArgs) {
         int count = 0;
-        count = db.update(TASK_TABLE_NAME, values, selection, selectionArgs);
+        db.beginTransaction();
+        try {
+            count = db.update(TASK_TABLE_NAME, values, selection, selectionArgs);
+            db.setTransactionSuccessful();
+        }  finally {
+            db.endTransaction();
+        }
+
 
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
+    }
+
+    private int returnValue(String sl){
+        Cursor cursor;
+        String selectQuery = "SELECT assignedto FROM "+ TASK_TABLE_NAME +"  WHERE sl = "+sl ;
+        cursor = db.rawQuery(selectQuery, null);
+
+        int slNo = 0 ;
+        String assign = null;
+        if (cursor.moveToFirst()) {
+            assign = cursor.getString(cursor.getColumnIndex(ASSIGNEDTO));
+        }
+        if(assign.length()>0){
+            slNo = 1 ;
+        }
+        AppController.getAppController().getInAppNotifier().log("assign", "assign:  " + assign+"  slNo: "+slNo ) ;
+        return slNo;
     }
 
     @Override
