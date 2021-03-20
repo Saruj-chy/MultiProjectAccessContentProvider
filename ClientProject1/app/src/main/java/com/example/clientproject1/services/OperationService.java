@@ -48,7 +48,7 @@ public class OperationService extends IntentService {
             Log.e("loop", " loop "+ i   );
             OnNewTaskClick() ;
             try {
-                Thread.sleep(1000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

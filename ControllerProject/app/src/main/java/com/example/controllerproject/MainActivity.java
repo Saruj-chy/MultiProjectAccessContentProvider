@@ -46,7 +46,7 @@ import static com.example.controllerproject.ControllerProvider.SL;
 import static com.example.controllerproject.ControllerProvider.TASK_TABLE_URI;
 
 public class MainActivity extends AppCompatActivity {
-    String URL = "http://192.168.1.6/android/AgamiLab/smart_shop/sendPushNotification.php" ;
+//    String URL = "http://192.168.1.149/android/AgamiLab/smart_shop/sendPushNotification.php" ;
 
     private EditText mLogNoEditText, mSrcEditText, mDataEditText;
     private Button mInsertBtn, mUpdateBtn, mDeleteBtn, mShowBtn, mAssignBtn, mCompleteBtn ;

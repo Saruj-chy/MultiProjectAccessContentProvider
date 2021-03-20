@@ -127,15 +127,24 @@ public class ControllerProvider extends ContentProvider {
         switch (selection){
             case "new_task":
                 AppController.getAppController().getInAppNotifier().log("trig", "selection: "+ selection );
-                String selectQuery = "SELECT * FROM "+ TASK_TABLE_NAME +"  WHERE `assignedto` = \"\" ORDER BY sl ASC LIMIT 1" ;
 
-//                db.beginTransactionNonExclusive();
-//                try {
-//                    db.setTransactionSuccessful();
-//                } finally {
-//                    db.endTransaction();
-//                }
-                c = db.rawQuery(selectQuery, null);
+
+                db.beginTransaction();
+                try {
+//                    try {
+//                        Thread.sleep(random);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+                    String selectQuery = "SELECT * FROM "+ TASK_TABLE_NAME +"  WHERE `assignedto` = \"\" ORDER BY sl ASC LIMIT 1" ;
+                    AppController.getAppController().getInAppNotifier().log("random", "random" ) ;
+
+                    c = db.rawQuery(selectQuery, null);
+                    db.setTransactionSuccessful();
+                }  finally {
+                    db.endTransaction();
+                }
+
                 break;
             case "all_task":
                 qb.setTables(TASK_TABLE_NAME);
@@ -167,6 +176,7 @@ public class ControllerProvider extends ContentProvider {
                 break;
 
         }
+
         return c;
     }
 
@@ -183,13 +193,16 @@ public class ControllerProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values,
                       String selection, String[] selectionArgs) {
         int count = 0;
-        db.beginTransaction();
-        try {
-            count = db.update(TASK_TABLE_NAME, values, selection, selectionArgs);
-            db.setTransactionSuccessful();
-        }  finally {
-            db.endTransaction();
-        }
+        count = db.update(TASK_TABLE_NAME, values, selection, selectionArgs);
+//        db.beginTransaction();
+//        try {
+//            count = db.update(TASK_TABLE_NAME, values, selection, selectionArgs);
+//            db.setTransactionSuccessful();
+//        }  finally {
+//            db.endTransaction();
+//        }
+
+//        AppController.getAppController().getInAppNotifier().log("countNum", "count: "+ count) ;
 
 
         getContext().getContentResolver().notifyChange(uri, null);

@@ -47,7 +47,7 @@ public class OperationService extends IntentService {
             Log.e("tag", "intent") ;
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

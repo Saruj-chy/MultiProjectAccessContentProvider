@@ -41,7 +41,7 @@ public class OperationService extends IntentService {
         for(int i=0; i<50; i++){
             OnNewTaskClick() ;
             try {
-                Thread.sleep(1000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -64,7 +64,7 @@ public class OperationService extends IntentService {
         values.put(ASSIGNEDTO, "c3");
         values.put(ASSIGNDATETIME, currentTime);
 
-        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl=\""+ sl +"\"", null) ;
+        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl=\""+ sl +"\" and assignedto = \"\" ",  null) ;
         if(c>0){
             LogTableUri("c3", "mMsg", "c3 assigned new task sl no: "+ sl, currentTime ) ;
         }
