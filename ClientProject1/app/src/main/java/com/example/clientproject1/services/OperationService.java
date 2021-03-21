@@ -44,11 +44,10 @@ public class OperationService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         for(int i=0; i<50; i++){
             AppController.getAppController().getInAppNotifier().log("loop", " loop "+ i );
-            AppController.getAppController().getInAppNotifier().log("dataError", " dataError: "+ dataError );
-            Log.e("loop", " loop "+ i   );
+//            Log.e("loop", " loop "+ i   );
             OnNewTaskClick() ;
             try {
-                Thread.sleep(3000);
+                Thread.sleep(1000) ;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -60,24 +59,47 @@ public class OperationService extends IntentService {
     }
 
     public void OnNewTaskClick(){
-        Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));
-        Cursor cursor = getContentResolver().query(students, null, "new_task", null, null);
+//        Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));
+//        Cursor cursor = getContentResolver().query(students, null, "new_task", null, null);
+//
+//        String sl = null;
+//        if (cursor.moveToFirst()) {
+//            sl = cursor.getString(cursor.getColumnIndex(SL));
+//        }
+//        long currentTime = Calendar.getInstance().getTimeInMillis();
+//        ContentValues values = new ContentValues() ;
+//        values.put(ASSIGNEDTO, "c1");
+//        values.put(ASSIGNDATETIME, currentTime);
+//
+//        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl=\""+ sl +"\" and assignedto = \"\" ", null) ;
+//        if(c>0){
+//            LogTableUri("c1", "c1 update task sl no.  "+sl, "c1 assigned new task sl no: "+ sl, currentTime ) ;
+//        }
 
-        String sl = null;
-        if (cursor.moveToFirst()) {
-            sl = cursor.getString(cursor.getColumnIndex(SL));
-        }
+//        Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));
+//        Cursor cursor = getContentResolver().query(students, null, "new_task", null, null);
+
+//        String sl = null;
+//        if (cursor.moveToFirst()) {
+//            sl = cursor.getString(cursor.getColumnIndex(SL));
+//        }
         long currentTime = Calendar.getInstance().getTimeInMillis();
         ContentValues values = new ContentValues() ;
-        values.put(ASSIGNEDTO, "c1");
+        values.put(ASSIGNEDTO, "Client1");
         values.put(ASSIGNDATETIME, currentTime);
 
-        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl=\""+ sl +"\" and assignedto = \"\" ", null) ;
+        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl = ( SELECT sl FROM task_table WHERE assignedto=\"\" LIMIT 1) ", null) ;
+        AppController.getAppController().getInAppNotifier().log("c", " c: "+ c );
+
         if(c>0){
-            LogTableUri("c1", "mMsg", "c1 assigned new task sl no: "+ sl, currentTime ) ;
-        }else{
-            dataError=true;
+            LogTableUri("Client1", "Client1 update task  ", "Client1 assigned new task ", currentTime ) ;
         }
+
+
+
+//        else{
+//            dataError=true;
+//        }
 
 
 //        ClearAllText();

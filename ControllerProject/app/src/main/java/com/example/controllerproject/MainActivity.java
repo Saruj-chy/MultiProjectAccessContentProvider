@@ -63,15 +63,13 @@ public class MainActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().subscribeToTopic("com.example.controllerproject") ;
     }
 
-
-
     public void OnInsertClick(View v){
         getAllEditText();
 
         long currentTime = Calendar.getInstance().getTimeInMillis();
         ContentValues task_Values = new ContentValues();
         task_Values.put(ControllerProvider.MSG, mMsg);
-        task_Values.put(ASSIGNEDTO, mAssignedTo);
+//        task_Values.put(ASSIGNEDTO, mAssignedTo);
         task_Values.put(ControllerProvider.ENTRYDATETIME, currentTime);
         task_Values.put(ASSIGNDATETIME, 0 );
         task_Values.put(ControllerProvider.COMPLETEDATETIME, 0 );

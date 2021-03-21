@@ -47,7 +47,7 @@ public class OperationService extends IntentService {
             Log.e("tag", "intent") ;
 
             try {
-                Thread.sleep(3000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -59,25 +59,38 @@ public class OperationService extends IntentService {
     }
 
     public void OnNewTaskClick(){
-        Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));
-        Cursor cursor = getContentResolver().query(students, null, "new_task", null, null);
+//        Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));
+//        Cursor cursor = getContentResolver().query(students, null, "new_task", null, null);
+//
+//        String sl = null;
+//        if (cursor.moveToFirst()) {
+//            sl = cursor.getString(cursor.getColumnIndex(SL));
+//        }
+//        long currentTime = Calendar.getInstance().getTimeInMillis();
+//        ContentValues values = new ContentValues() ;
+//        values.put(ASSIGNEDTO, "c2");
+//        values.put(ASSIGNDATETIME, currentTime);
+//
+//        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl=\""+ sl +"\" and assignedto = \"\" ", null) ;
+//        if(c>0){
+//            LogTableUri("c2", "c2 update task sl no.  "+sl,  "c2 assigned new task sl no: "+ sl, currentTime ) ;
+//        }
+//        else{
+//            dataError=true;
+//        }
 
-        String sl = null;
-        if (cursor.moveToFirst()) {
-            sl = cursor.getString(cursor.getColumnIndex(SL));
-        }
+
         long currentTime = Calendar.getInstance().getTimeInMillis();
         ContentValues values = new ContentValues() ;
-        values.put(ASSIGNEDTO, "c2");
+        values.put(ASSIGNEDTO, "Client2");
         values.put(ASSIGNDATETIME, currentTime);
 
-        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl=\""+ sl +"\" and assignedto = \"\" ", null) ;
-        if(c>0){
-            LogTableUri("c2", "mMsg", "c2 assigned new task sl no: "+ sl, currentTime ) ;
-        }else{
-            dataError=true;
-        }
+        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl = ( SELECT sl FROM task_table WHERE assignedto=\"\" LIMIT 1) ", null) ;
 
+
+        if(c>0){
+            LogTableUri("Client2", "Client2 update task  ", "Client2 assigned new task ", currentTime ) ;
+        }
 
 //        ClearAllText();
     }

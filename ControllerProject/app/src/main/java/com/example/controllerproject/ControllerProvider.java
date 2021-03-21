@@ -79,7 +79,6 @@ public class ControllerProvider extends ContentProvider {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(CREATE_LOG_TABLE);
-
             db.execSQL(CREATE_TASK_TABLE);
         }
 
@@ -126,25 +125,14 @@ public class ControllerProvider extends ContentProvider {
 
         switch (selection){
             case "new_task":
-                AppController.getAppController().getInAppNotifier().log("trig", "selection: "+ selection );
-
-
                 db.beginTransaction();
                 try {
-//                    try {
-//                        Thread.sleep(random);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
                     String selectQuery = "SELECT * FROM "+ TASK_TABLE_NAME +"  WHERE `assignedto` = \"\" ORDER BY sl ASC LIMIT 1" ;
-                    AppController.getAppController().getInAppNotifier().log("random", "random" ) ;
-
                     c = db.rawQuery(selectQuery, null);
                     db.setTransactionSuccessful();
                 }  finally {
                     db.endTransaction();
                 }
-
                 break;
             case "all_task":
                 qb.setTables(TASK_TABLE_NAME);
@@ -174,9 +162,7 @@ public class ControllerProvider extends ContentProvider {
 
                 c.setNotificationUri(getContext().getContentResolver(), uri);
                 break;
-
         }
-
         return c;
     }
 
@@ -194,37 +180,10 @@ public class ControllerProvider extends ContentProvider {
                       String selection, String[] selectionArgs) {
         int count = 0;
         count = db.update(TASK_TABLE_NAME, values, selection, selectionArgs);
-//        db.beginTransaction();
-//        try {
-//            count = db.update(TASK_TABLE_NAME, values, selection, selectionArgs);
-//            db.setTransactionSuccessful();
-//        }  finally {
-//            db.endTransaction();
-//        }
-
-//        AppController.getAppController().getInAppNotifier().log("countNum", "count: "+ count) ;
-
-
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
     }
 
-    private int returnValue(String sl){
-        Cursor cursor;
-        String selectQuery = "SELECT assignedto FROM "+ TASK_TABLE_NAME +"  WHERE sl = "+sl ;
-        cursor = db.rawQuery(selectQuery, null);
-
-        int slNo = 0 ;
-        String assign = null;
-        if (cursor.moveToFirst()) {
-            assign = cursor.getString(cursor.getColumnIndex(ASSIGNEDTO));
-        }
-        if(assign.length()>0){
-            slNo = 1 ;
-        }
-        AppController.getAppController().getInAppNotifier().log("assign", "assign:  " + assign+"  slNo: "+slNo ) ;
-        return slNo;
-    }
 
     @Override
     public String getType(Uri uri) {

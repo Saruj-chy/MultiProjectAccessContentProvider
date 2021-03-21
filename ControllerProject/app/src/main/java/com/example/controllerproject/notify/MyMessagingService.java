@@ -76,7 +76,7 @@ public class MyMessagingService extends FirebaseMessagingService {
                 Uri task_uri = getContentResolver().insert( ControllerProvider.TASK_TABLE_URI, task_Values);
                 Log.e("TAG", "task_uri: "+task_uri) ;
 
-                LogTableUri("", map.containsKey("data")+"", map.containsKey("message")+"", currentTime ) ;
+                LogTableUri("", map.get("data")+"", map.get("message")+"", currentTime ) ;
 
                 if(i==49){
                     String topic = "ALLCLIENT";
