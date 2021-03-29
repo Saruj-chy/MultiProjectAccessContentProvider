@@ -2,10 +2,14 @@ package com.example.clientproject2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -54,11 +58,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initialize();
-
-//        FirebaseApp.initializeApp(this);
-
-
         FirebaseMessaging.getInstance().subscribeToTopic("ALLCLIENT") ;
+
+//        MainActivity.setAlarm(getApplicationContext());
+
+    }
+
+    public static void setAlarm(Context context){
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+
+        //SET BROADCAST RECEIVER WHICH WILL BE THE ONE TO LISTEN FOR THE ALARM SIGNAL
+        Intent intent = new Intent(context, AlarmTriggerBroadcastReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 22222, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        //SETING THE ALARM
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            Log.e("TAG", "mainactivity kitkat") ;
+
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 20*1000, pendingIntent);
+        }
+        else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                Log.e("TAG", "mainactivity M") ;
+
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 20*1000, pendingIntent);
+            }
+        }
 
     }
 

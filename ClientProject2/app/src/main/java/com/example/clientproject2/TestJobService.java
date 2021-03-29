@@ -1,47 +1,42 @@
 package com.example.clientproject2;
 
-import android.app.IntentService;
+import android.app.job.JobParameters;
+import android.app.job.JobService;
 import android.content.ContentValues;
-import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.CountDownTimer;
+import android.os.Build;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
-
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.Locale;
 
-import static com.example.clientproject2.MainActivity.SRC;
-import static com.example.clientproject2.MainActivity.DATA;
 import static com.example.clientproject2.MainActivity.ACTIONS;
-import static com.example.clientproject2.MainActivity.TIMESTAMP;
-import static com.example.clientproject2.MainActivity.LOG_TABLE_URI;
 import static com.example.clientproject2.MainActivity.ASSIGNDATETIME;
 import static com.example.clientproject2.MainActivity.ASSIGNEDTO;
-import static com.example.clientproject2.MainActivity.SL;
+import static com.example.clientproject2.MainActivity.DATA;
+import static com.example.clientproject2.MainActivity.LOG_TABLE_URI;
+import static com.example.clientproject2.MainActivity.SRC;
 import static com.example.clientproject2.MainActivity.TASK_TABLE_URI;
+import static com.example.clientproject2.MainActivity.TIMESTAMP;
 
-public class OperationService extends IntentService {
-    private CountDownTimer countDownTimer;
-    long remainingRefreshTime = 10000 ;
-
-    private String name, name1;
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+public class TestJobService extends JobService {
+    private static final String TAG = "HardWorkService";
     private boolean dataError = false;
 
-
-    public OperationService() {
-        super("name");
-//        this.name1 = name ;
-//        AppController.getAppController().getInAppNotifier().log("cons", " "+ name1 );
-
-    }
-
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
+    public boolean onStartJob(JobParameters params) {
+        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
 
-        Log.e("tag", "intent") ;
+        // We don't do any real 'work' in this sample app. All we'll
+        // do is track which jobs have landed on our service, and
+        // update the UI accordingly.
+        Log.i(TAG, "on start job: " + params.getJobId()+"  currentTime: "+ currentTime );
         for(int i=0; i<50; i++){
             OnNewTaskClick() ;
             Log.e("tag", "intent") ;
@@ -51,12 +46,32 @@ public class OperationService extends IntentService {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(dataError==true){
-                break;
-            }
+//            if(dataError==true){
+//                break;
+//            }
         }
 
+
+
+        return true;
     }
+
+    @Override
+    public boolean onStopJob(JobParameters params) {
+        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+
+        Log.i(TAG, "on stop job: " + params.getJobId() +"  currentTime: "+ currentTime );
+        return false;
+    }
+
+//    FirebaseShedulerActivity mActivity;
+//    private final LinkedList<JobParameters> jobParamsMap = new LinkedList<JobParameters>();
+//
+//    public void setUiCallback(FirebaseShedulerActivity activity) {
+//
+//        mActivity = activity;
+//    }
+
 
     public void OnNewTaskClick(){
 //        Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));

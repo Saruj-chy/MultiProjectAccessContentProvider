@@ -1,55 +1,76 @@
 package com.example.clientproject3;
 
-import android.app.IntentService;
+import android.app.job.JobParameters;
+import android.app.job.JobService;
 import android.content.ContentValues;
-import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.CountDownTimer;
+import android.os.Build;
+import android.util.Log;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import static com.example.clientproject3.MainActivity.ACTIONS;
 import static com.example.clientproject3.MainActivity.ASSIGNDATETIME;
 import static com.example.clientproject3.MainActivity.ASSIGNEDTO;
 import static com.example.clientproject3.MainActivity.DATA;
 import static com.example.clientproject3.MainActivity.LOG_TABLE_URI;
-import static com.example.clientproject3.MainActivity.SL;
 import static com.example.clientproject3.MainActivity.SRC;
 import static com.example.clientproject3.MainActivity.TASK_TABLE_URI;
 import static com.example.clientproject3.MainActivity.TIMESTAMP;
 
-public class OperationService extends IntentService {
-    private CountDownTimer countDownTimer;
-    long remainingRefreshTime = 10000 ;
-
-    private String name, name1;
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+public class TestJobService extends JobService {
+    private static final String TAG = "HardWorkService";
     private boolean dataError = false;
 
-
-    public OperationService() {
-        super("name");
-//        this.name1 = name ;
-//        AppController.getAppController().getInAppNotifier().log("cons", " "+ name1 );
-
-    }
-
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
+    public boolean onStartJob(JobParameters params) {
+        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+
+        // We don't do any real 'work' in this sample app. All we'll
+        // do is track which jobs have landed on our service, and
+        // update the UI accordingly.
+        Log.i(TAG, "on start job: " + params.getJobId()+"  currentTime: "+ currentTime );
         for(int i=0; i<50; i++){
             OnNewTaskClick() ;
+            Log.e("tag", "intent") ;
+
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(dataError==true){
-                break;
-            }
+//            if(dataError==true){
+//                break;
+//            }
         }
+
+
+
+        return true;
     }
+
+    @Override
+    public boolean onStopJob(JobParameters params) {
+        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+
+        Log.i(TAG, "on stop job: " + params.getJobId() +"  currentTime: "+ currentTime );
+        return false;
+    }
+
+//    FirebaseShedulerActivity mActivity;
+//    private final LinkedList<JobParameters> jobParamsMap = new LinkedList<JobParameters>();
+//
+//    public void setUiCallback(FirebaseShedulerActivity activity) {
+//
+//        mActivity = activity;
+//    }
+
 
     public void OnNewTaskClick(){
 //        Uri students = Uri.parse(String.valueOf(TASK_TABLE_URI));
@@ -61,13 +82,14 @@ public class OperationService extends IntentService {
 //        }
 //        long currentTime = Calendar.getInstance().getTimeInMillis();
 //        ContentValues values = new ContentValues() ;
-//        values.put(ASSIGNEDTO, "c3");
+//        values.put(ASSIGNEDTO, "c2");
 //        values.put(ASSIGNDATETIME, currentTime);
 //
-//        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl=\""+ sl +"\" and assignedto = \"\" ",  null) ;
+//        int c= getContentResolver().update(TASK_TABLE_URI, values, "sl=\""+ sl +"\" and assignedto = \"\" ", null) ;
 //        if(c>0){
-//            LogTableUri("c3", "c3 update task sl no.  "+sl,  "c3 assigned new task sl no: "+ sl, currentTime ) ;
+//            LogTableUri("c2", "c2 update task sl no.  "+sl,  "c2 assigned new task sl no: "+ sl, currentTime ) ;
 //        }
+
 
 
         long currentTime = Calendar.getInstance().getTimeInMillis();
@@ -77,12 +99,12 @@ public class OperationService extends IntentService {
 
         int c= getContentResolver().update(TASK_TABLE_URI, values, "sl = ( SELECT sl FROM task_table WHERE assignedto=\"\" LIMIT 1) ", null) ;
 
+
         if(c>0){
             LogTableUri("Client3", "Client3 update task  ", "Client3 assigned new task ", currentTime ) ;
-        } else{
+        }else{
             dataError=true;
         }
-
 
 //        ClearAllText();
     }

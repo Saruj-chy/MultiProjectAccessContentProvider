@@ -29,6 +29,7 @@ public class AppConstants {
     public static final String USER_AUTHKEY = "user_authkey";
 
     public static final String API_KEY = "ewfw?f23u#rfg3872r23=jrfg87wefc" ;
+    public static boolean DATAENTER = false ;
 
     public static class Store {
         public static final String STORE_NAME = "name";
@@ -37,5 +38,8 @@ public class AppConstants {
         public static final String STORE_LON = "lon";
         public static final String STORE = "store";
         public static final String STORE_PRODUCT_NO = "store_productno";
+    }
+    public static void dataEnter(boolean dataEnter){
+        DATAENTER = dataEnter ;
     }
 }
