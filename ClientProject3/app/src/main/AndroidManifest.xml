@@ -3,6 +3,9 @@
     package="com.example.clientproject3">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.SET_ALARM"/>
 
 
     <application
@@ -27,6 +30,24 @@
         </service>
 
         <service android:name=".OperationService"/>
+        <receiver
+            android:name=".AlarmTriggerBroadcastReceiver"
+            android:process=":remote">
+
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+
+            <intent-filter android:priority="3">
+                <action android:name="com.example.clientproject.ALARM_RECIEVED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".TestJobService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
 
     </application>
 

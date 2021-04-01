@@ -2,9 +2,14 @@ package com.example.clientproject3;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +28,12 @@ public class MainActivity extends AppCompatActivity {
     public static final Uri LOG_TABLE_URI = Uri.parse(LOG_URL);
     public static final String TASK_URL = "content://" + PROVIDER_NAME + "/tasktable";
     public static final Uri TASK_TABLE_URI = Uri.parse(TASK_URL);
+
+
+    public static final String PROVIDER_NAME1 = "com.agamilabs.smartshop.database.ControllerProvider";
+    public static final String RECIPENT_MSG = "content://" + PROVIDER_NAME1 + "/recipent_msg";
+    public static final Uri RECIPENT_MSG_URI = Uri.parse(RECIPENT_MSG);
+
 
     //    static final String ID = "id";
     public static final String LOGNO = "logno";
@@ -54,6 +65,31 @@ public class MainActivity extends AppCompatActivity {
         initialize();
         FirebaseMessaging.getInstance().subscribeToTopic("ALLCLIENT") ;
 
+//        setAlarm(getApplicationContext());
+
+    }
+
+    public static void setAlarm(Context context){
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+
+        //SET BROADCAST RECEIVER WHICH WILL BE THE ONE TO LISTEN FOR THE ALARM SIGNAL
+        Intent intent = new Intent(context, AlarmTriggerBroadcastReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 22222, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        //SETING THE ALARM
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            Log.e("TAG", "mainactivity kitkat") ;
+
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 20*1000, pendingIntent);
+        }
+        else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                Log.e("TAG", "mainactivity M") ;
+
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 20*1000, pendingIntent);
+            }
+        }
 
     }
 

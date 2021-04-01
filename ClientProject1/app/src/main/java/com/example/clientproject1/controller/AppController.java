@@ -7,6 +7,8 @@ import android.util.Base64;
 
 import androidx.multidex.MultiDexApplication;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -40,6 +42,8 @@ public class AppController extends MultiDexApplication {
         //FacebookSdk.sdkInitialize(getApplicationContext());
 
         getKeyHash();
+//        FirebaseMessaging.getInstance().subscribeToTopic("ALLCLIENT") ;
+
 
     }
 
