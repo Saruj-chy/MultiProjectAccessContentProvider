@@ -1,10 +1,5 @@
 package com.example.clientproject3.service;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
@@ -25,21 +20,7 @@ import androidx.core.content.ContextCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
-import static com.example.clientproject3.MainActivity.ACTIONS;
-import static com.example.clientproject3.MainActivity.ASSIGNDATETIME;
-import static com.example.clientproject3.MainActivity.ASSIGNEDTO;
-import static com.example.clientproject3.MainActivity.DATA;
-import static com.example.clientproject3.MainActivity.LOG_TABLE_URI;
 import static com.example.clientproject3.MainActivity.RECIPENT_MSG_URI;
-import static com.example.clientproject3.MainActivity.SL;
-import static com.example.clientproject3.MainActivity.TASK_TABLE_URI;
-import static com.example.clientproject3.MainActivity.SRC;
-import static com.example.clientproject3.MainActivity.TIMESTAMP;
 
 public class MyMessagingService extends FirebaseMessagingService {
     String TAG = "TAG";
@@ -52,22 +33,9 @@ public class MyMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         if (remoteMessage.getData().size() > 0) {
-
-//            mServiceComponent = new ComponentName(getApplicationContext(), TestJobService.class);
-//            String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-//            JobInfo.Builder builder = new JobInfo.Builder(kJobId++,mServiceComponent);
-////            builder.setMinimumLatency(5000);
-//            builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
-//
-//            JobScheduler jobScheduler =
-//                    (JobScheduler) getApplication().getSystemService(Context.JOB_SCHEDULER_SERVICE);
-//            jobScheduler.schedule(builder.build());
-
             dataExist = true ;
             for(int i=1; i<=1000; i++){
                 OnNewTaskClick() ;
-//                Log.e("tag", "intent "+i+" client1") ;
-
                 try {
                     Thread.sleep(60 * 1000);
                 } catch (InterruptedException e) {
@@ -78,13 +46,6 @@ public class MyMessagingService extends FirebaseMessagingService {
                     break;
                 }
             }
-
-
-
-
-            Log.e("TAG", "jobservice: "+ mServiceComponent) ;
-
-
         }
 }
     public void OnNewTaskClick(){
@@ -97,8 +58,6 @@ public class MyMessagingService extends FirebaseMessagingService {
         }else{
             getClientPhnSms();
         }
-
-        Log.e("TAG", "c: "+c ) ;
     }
 
     public void getClientPhnSms() {
@@ -126,8 +85,8 @@ public class MyMessagingService extends FirebaseMessagingService {
 
     public void sendSMSandNotifyUser(String phoneNumber, String message, String name) {
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-//        SmsManager smsManager = SmsManager.getDefault();
-//        smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(phoneNumber, null, message, null, null);
         Log.e("TAG", "client3 phoneNumber: "+ phoneNumber+"   name: "+ name +"  "+ message ) ;
 
     }

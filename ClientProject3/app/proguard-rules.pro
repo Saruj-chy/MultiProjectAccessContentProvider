@@ -19,22 +19,22 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-
--keep class com.example.clientproject3.service.** { *; }
-
--keep public class TestJobService
-
--optimizations !method/removal/parameter
-
--repackageclasses
-
--keepattributes *Annotation*, Signature, Exception
-
--keepattributes LocalVariableTable, LocalVariableTypeTable
-
--keepattributes SourceFile, LineNumberTable
-
--keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
--keepnames class org.jsoup.nodes.Entities
+#
+#-keep class com.example.clientproject3.service.** { *; }
+#
+#-keep public class TestJobService
+#
+#-optimizations !method/removal/parameter
+#
+#-repackageclasses
+#
+#-keepattributes *Annotation*, Signature, Exception
+#
+#-keepattributes LocalVariableTable, LocalVariableTypeTable
+#
+#-keepattributes SourceFile, LineNumberTable
+#
+#-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+#-keepnames class org.jsoup.nodes.Entities
 
 
