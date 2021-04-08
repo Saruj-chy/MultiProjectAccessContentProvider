@@ -1,4 +1,4 @@
-package com.example.clientproject3;
+package com.example.clientproject3.service;
 
 import android.app.IntentService;
 import android.content.ContentValues;

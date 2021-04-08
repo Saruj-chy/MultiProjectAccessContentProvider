@@ -28,7 +28,7 @@ public class TestJobService extends JobService {
     public boolean onStartJob(JobParameters params) {
         String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
         for(int i=1; i<=50; i++){
-            OnNewTaskClick() ;
+//            OnNewTaskClick() ;
             Log.e("tag", "intent "+i+" client1") ;
 
             try {
@@ -36,9 +36,7 @@ public class TestJobService extends JobService {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
-
         return true;
     }
 
@@ -51,9 +49,7 @@ public class TestJobService extends JobService {
     }
 
     public void OnNewTaskClick(){
-
         Uri students = Uri.parse(String.valueOf(RECIPENT_MSG_URI));
-
         ContentValues values = new ContentValues() ;
         values.put("clientName", "Client 1");
         int c= getContentResolver().update(students, values, "", null) ;

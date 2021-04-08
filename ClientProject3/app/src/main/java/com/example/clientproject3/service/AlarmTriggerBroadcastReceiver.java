@@ -1,10 +1,8 @@
-package com.example.clientproject3;
+package com.example.clientproject3.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
 public class AlarmTriggerBroadcastReceiver extends BroadcastReceiver {
 

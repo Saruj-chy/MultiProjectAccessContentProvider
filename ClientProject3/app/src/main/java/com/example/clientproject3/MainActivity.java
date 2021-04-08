@@ -1,7 +1,9 @@
 package com.example.clientproject3;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
@@ -18,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.clientproject3.service.AlarmTriggerBroadcastReceiver;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Calendar;
@@ -64,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
 
         initialize();
         FirebaseMessaging.getInstance().subscribeToTopic("ALLCLIENT") ;
+
+
+
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[] {Manifest.permission.SEND_SMS}, 100);
 
 //        setAlarm(getApplicationContext());
 

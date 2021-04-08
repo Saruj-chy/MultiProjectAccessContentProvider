@@ -1,7 +1,9 @@
 package com.example.clientproject2;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
@@ -64,5 +66,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().subscribeToTopic("ALLCLIENT") ;
 
 
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[] {Manifest.permission.SEND_SMS}, 100);
     }
 }

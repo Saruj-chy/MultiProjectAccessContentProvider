@@ -1,4 +1,4 @@
-package com.example.clientproject2;
+package com.example.clientproject3.service;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -30,17 +30,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.example.clientproject2.MainActivity.ACTIONS;
-import static com.example.clientproject2.MainActivity.ASSIGNDATETIME;
-import static com.example.clientproject2.MainActivity.ASSIGNEDTO;
-import static com.example.clientproject2.MainActivity.DATA;
-import static com.example.clientproject2.MainActivity.LOG_TABLE_URI;
-import static com.example.clientproject2.MainActivity.RECIPENT_MSG_URI;
-import static com.example.clientproject2.MainActivity.SL;
-import static com.example.clientproject2.MainActivity.SRC;
-import static com.example.clientproject2.MainActivity.TASK_TABLE_URI;
-import static com.example.clientproject2.MainActivity.TIMESTAMP;
-
+import static com.example.clientproject3.MainActivity.ACTIONS;
+import static com.example.clientproject3.MainActivity.ASSIGNDATETIME;
+import static com.example.clientproject3.MainActivity.ASSIGNEDTO;
+import static com.example.clientproject3.MainActivity.DATA;
+import static com.example.clientproject3.MainActivity.LOG_TABLE_URI;
+import static com.example.clientproject3.MainActivity.RECIPENT_MSG_URI;
+import static com.example.clientproject3.MainActivity.SL;
+import static com.example.clientproject3.MainActivity.TASK_TABLE_URI;
+import static com.example.clientproject3.MainActivity.SRC;
+import static com.example.clientproject3.MainActivity.TIMESTAMP;
 
 public class MyMessagingService extends FirebaseMessagingService {
     String TAG = "TAG";
@@ -49,24 +48,20 @@ public class MyMessagingService extends FirebaseMessagingService {
     private boolean dataExist = false ;
     String rsNo, phoneNumber, message, name ;
 
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-
         if (remoteMessage.getData().size() > 0) {
 
 //            mServiceComponent = new ComponentName(getApplicationContext(), TestJobService.class);
 //            String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
 //            JobInfo.Builder builder = new JobInfo.Builder(kJobId++,mServiceComponent);
-////            builder.setMinimumLatency(1000);
+////            builder.setMinimumLatency(5000);
 //            builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
 //
 //            JobScheduler jobScheduler =
 //                    (JobScheduler) getApplication().getSystemService(Context.JOB_SCHEDULER_SERVICE);
 //            jobScheduler.schedule(builder.build());
-
-
 
             dataExist = true ;
             for(int i=1; i<=1000; i++){
@@ -86,14 +81,16 @@ public class MyMessagingService extends FirebaseMessagingService {
 
 
 
+
             Log.e("TAG", "jobservice: "+ mServiceComponent) ;
 
+
         }
-    }
+}
     public void OnNewTaskClick(){
         Uri students = Uri.parse(String.valueOf(RECIPENT_MSG_URI));
         ContentValues values = new ContentValues() ;
-        values.put("clientName", "Client 2");
+        values.put("clientName", "Client 3");
         int c= getContentResolver().update(students, values, "client", null) ;
         if(c==0){
             dataExist = false;
@@ -103,9 +100,10 @@ public class MyMessagingService extends FirebaseMessagingService {
 
         Log.e("TAG", "c: "+c ) ;
     }
+
     public void getClientPhnSms() {
         Uri students = Uri.parse(String.valueOf(RECIPENT_MSG_URI));
-        Cursor c = getContentResolver().query(students, null, "Client 2", null, "") ;
+        Cursor c = getContentResolver().query(students, null, "Client 3", null, "") ;
 
         if (c.moveToFirst()) {
             do{
@@ -115,9 +113,6 @@ public class MyMessagingService extends FirebaseMessagingService {
                 name= c.getString(c.getColumnIndex( "assignedClient" )) ;
                 sendSMSandNotifyUser(phoneNumber, message, name);
                 UpdateCurrentClient(rsNo);
-                Log.e("TAG", "  rsNo: "+ rsNo+ "  phnNum: "+ phoneNumber+"") ;
-
-
             } while (c.moveToNext());
         }
 
@@ -131,9 +126,9 @@ public class MyMessagingService extends FirebaseMessagingService {
 
     public void sendSMSandNotifyUser(String phoneNumber, String message, String name) {
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(phoneNumber, null, message, null, null);
-        Log.e("TAG", "client2 phoneNumber: "+ phoneNumber+"   name: "+ name +"  "+ message ) ;
+//        SmsManager smsManager = SmsManager.getDefault();
+//        smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+        Log.e("TAG", "client3 phoneNumber: "+ phoneNumber+"   name: "+ name +"  "+ message ) ;
 
     }
 }

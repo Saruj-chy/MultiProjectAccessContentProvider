@@ -1,12 +1,16 @@
 package com.example.clientproject1;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -76,7 +80,40 @@ public class MainActivity extends AppCompatActivity {
 
 
         FirebaseMessaging.getInstance().subscribeToTopic("ALLCLIENT") ;
+
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[] {Manifest.permission.SEND_SMS}, 100);
+
+//        getClientPhnSms() ;
     }
+
+    public void getClientPhnSms() {
+        Uri students = Uri.parse(String.valueOf(RECIPENT_MSG_URI));
+//        Cursor c = ContentResolver.managedQuery(students, null, "Client 1", null, "");
+        Cursor c = getContentResolver().query(students, null, "Client 1", null, "") ;
+
+        Log.e("count", c.getCount() +"") ;
+//        Log.e("task", c.getString(c.getColumnIndex(ControllerProvider.MSG)) ) ;
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if (c.moveToFirst()) {
+//            Log.e("task", c.getString(c.getColumnIndex(ControllerProvider.MSG)) ) ;
+            do{
+                stringBuilder.append(" SMSID: "+c.getString(c.getColumnIndex("SmsID")) +
+                        " \n RecipientsNumber: " +  c.getString(c.getColumnIndex("RecipientsNumber")) +
+                        " \n Message: " +  c.getString(c.getColumnIndex( "Message")) +
+                        " \n MessageStatus: " + c.getString(c.getColumnIndex( "MessageStatus" ))+
+                        " \n APIType: " + c.getString(c.getColumnIndex( "APIType" ))+
+                        " \n assignedClient: " + c.getString(c.getColumnIndex( "assignedClient" ))+
+                        " \n rsno: " + c.getString(c.getColumnIndex( "rsno" ))+
+                        " \n \n"    );
+            } while (c.moveToNext());
+        }
+        Log.e("show", stringBuilder+"==");
+
+    }
+
+
 
 
 }
